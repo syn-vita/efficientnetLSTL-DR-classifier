@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+  }
+  
+  .btn-outline {
+    @apply btn border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-primary-500;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+  }
+  
+  .upload-area {
+    @apply border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary-400 hover:bg-primary-50 transition-all duration-200 cursor-pointer;
+  }
+  
+  .upload-area.dragover {
+    @apply border-primary-500 bg-primary-50;
+  }
+  
+  .tab {
+    @apply px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer;
+  }
+  
+  .tab-active {
+    @apply tab bg-primary-100 text-primary-700;
+  }
+  
+  .tab-inactive {
+    @apply tab text-gray-600 hover:text-gray-900 hover:bg-gray-100;
+  }
+  
+  .result-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+  
+  .result-no-dr {
+    @apply result-badge bg-success-100 text-success-700;
+  }
+  
+  .result-mild {
+    @apply result-badge bg-warning-100 text-warning-700;
+  }
+  
+  .result-moderate {
+    @apply result-badge bg-orange-100 text-orange-700;
+  }
+  
+  .result-severe {
+    @apply result-badge bg-danger-100 text-danger-700;
+  }
+  
+  .result-proliferative {
+    @apply result-badge bg-red-100 text-red-800;
+  }
+}

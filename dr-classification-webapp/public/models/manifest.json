@@ -1,0 +1,11 @@
+{
+  "baseline": {
+    "best": "efficientnet_b0_baseline_best_fold.onnx"
+  },
+  "cbam": {
+    "best": "efficientnet_b0_cbam_best_fold.onnx"
+  },
+  "lstl": {
+    "best": "efficientnet_b0_lstl_best_fold.onnx"
+  }
+}
