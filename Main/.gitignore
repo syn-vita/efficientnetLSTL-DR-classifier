@@ -1,8 +1,7 @@
 # Ignore raw dataset and large artifacts
 images/
 # Common training outputs
-*.pt
-*.onnx
+*.pth
 *.ckpt
 # Plots and logs (keep CSV summaries, but you can adjust)
 Figure Outputs/*
