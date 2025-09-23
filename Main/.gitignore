@@ -7,3 +7,4 @@ images/
 # Plots and logs (keep CSV summaries, but you can adjust)
 Figure Outputs/*
 !Figure Outputs/*.csv
+messidor-2/*
