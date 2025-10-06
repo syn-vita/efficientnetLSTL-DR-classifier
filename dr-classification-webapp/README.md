@@ -1,16 +1,42 @@
 # DR Classification Webapp
 
-A clean, minimal web application for diabetic retinopathy classification using AI models built with Vite, React, and Tailwind CSS.
+An advanced, professional web application for diabetic retinopathy classification using state-of-the-art AI models. Built with Vite, React, and Tailwind CSS, featuring a comprehensive landing page and enhanced user experience designed for academic presentations.
 
-## Features
+## ✨ Key Features
 
-- **Three Model Options**: Switch between Baseline EfficientNet-B0, CBAM-enhanced, and LSTL-enhanced models
-- **Drag & Drop Upload**: Easy image upload with preview
-- **Real-time Results**: Instant classification with confidence scores
-- **Responsive Design**: Works on desktop and mobile devices
-- **Customizable**: Easy to modify colors, text, and model configurations
+### 🎯 **Professional Landing Page**
+- Engaging hero section with gradient backgrounds and animations
+- Feature showcase highlighting AI technology
+- Model comparison section with detailed specifications
+- Research impact presentation
+- Smooth scrolling navigation
 
-## Quick Start
+### 🧠 **Three Advanced AI Models**
+- **Baseline EfficientNet-B0**: Standard architecture for comparison
+- **CBAM-Enhanced**: Convolutional Block Attention Module integration
+- **LSTL-Optimized**: Lightweight Spatial Temporal Learning implementation
+
+### 🎨 **Enhanced User Interface**
+- Modern gradient designs and micro-animations
+- Improved visual hierarchy and typography
+- Interactive hover effects and transitions
+- Responsive design for all screen sizes
+- Professional color scheme with blue/indigo gradients
+
+### 📊 **Advanced Analytics Display**
+- Real-time classification with confidence visualization
+- Animated probability distributions
+- Severity level indicators with progress bars
+- Clinical recommendations and disclaimers
+- Enhanced loading states with animated indicators
+
+### 🔧 **Technical Excellence**
+- Fast model inference using ONNX.js
+- Drag & drop image upload with preview
+- Client-side processing for privacy
+- Optimized for thesis presentations
+
+## 🚀 Quick Start
 
 ### 1. Install Dependencies
 ```bash

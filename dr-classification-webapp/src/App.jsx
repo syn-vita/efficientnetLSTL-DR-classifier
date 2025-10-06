@@ -2,14 +2,29 @@ import { useState } from 'react'
 import Header from './components/Header'
 import ImageUpload from './components/ImageUpload'
 import ResultDisplay from './components/ResultDisplay'
+import LandingPage from './components/LandingPage'
 import { modelConfig } from './config/models'
 
 function App() {
+  const [currentView, setCurrentView] = useState('landing') // 'landing' or 'testing'
   const [activeModel, setActiveModel] = useState('baseline')
   const [uploadedImage, setUploadedImage] = useState(null)
   const [prediction, setPrediction] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [lastError, setLastError] = useState(null)
+
+  const handleStartTesting = () => {
+    setCurrentView('testing')
+  }
+
+  const handleBackToLanding = () => {
+    setCurrentView('landing')
+    // Reset all state when going back to landing
+    setUploadedImage(null)
+    setPrediction(null)
+    setIsLoading(false)
+    setLastError(null)
+  }
 
   const handleImageUpload = async (imageFile) => {
     // Handle clear action or empty input
@@ -81,11 +96,19 @@ function App() {
     setPrediction(null)
   }
 
+  // Show landing page if currentView is 'landing'
+  if (currentView === 'landing') {
+    return <LandingPage onStartTesting={handleStartTesting} />
+  }
+
+  // Show testing interface
   return (
     <div className="min-h-screen bg-gray-50">
       <Header 
         activeModel={activeModel}
         onModelChange={setActiveModel}
+        onBackToLanding={handleBackToLanding}
+        showBackButton={true}
       />
       
       <main className="max-w-6xl mx-auto px-4 py-8">

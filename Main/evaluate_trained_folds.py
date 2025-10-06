@@ -39,18 +39,80 @@ def create_onnx_session(model_path: str) -> Tuple[ort.InferenceSession, str, str
 class ImageDataset(Dataset):
     def __init__(self, root_dir: str, records: List[Tuple[str, int]], transform=None):
         self.root_dir = root_dir
-        self.records = records
         self.transform = transform
+
+        # Build an index of all files under root_dir (recursive) for robust lookup
+        self._file_index_exact: Dict[str, str] = {}
+        self._file_index_lower: Dict[str, str] = {}
+        self._file_index_stem: Dict[str, str] = {}
+        for dirpath, _, files in os.walk(self.root_dir):
+            for fname in files:
+                path = os.path.join(dirpath, fname)
+                # Exact filename
+                self._file_index_exact.setdefault(fname, path)
+                # Lowercased filename
+                self._file_index_lower.setdefault(fname.lower(), path)
+                # Stem (name without extension)
+                stem = os.path.splitext(fname)[0]
+                self._file_index_stem.setdefault(stem, path)
+
+        # Resolve provided records to existing file paths; skip missing
+        resolved: List[Tuple[str, int]] = []
+        missing: List[str] = []
+        common_exts = [".png", ".jpg", ".jpeg", ".tif", ".tiff", ".bmp", ".gif"]
+        for fname, label in records:
+            orig = fname
+            # Absolute path provided
+            if os.path.isabs(fname) and os.path.isfile(fname):
+                resolved.append((fname, int(label)))
+                continue
+
+            # Try join as-is
+            cand = os.path.join(self.root_dir, fname)
+            if os.path.isfile(cand):
+                resolved.append((cand, int(label)))
+                continue
+
+            # Try index lookups
+            # 1) exact filename
+            p = self._file_index_exact.get(fname)
+            if p is None:
+                # 2) lowercase match
+                p = self._file_index_lower.get(fname.lower())
+            if p is None:
+                # 3) stem match (if no ext provided)
+                stem = os.path.splitext(fname)[0]
+                p = self._file_index_stem.get(stem)
+            if p is not None and os.path.isfile(p):
+                resolved.append((p, int(label)))
+                continue
+
+            # 4) Try appending common extensions if none supplied
+            if os.path.splitext(fname)[1] == "":
+                found = False
+                for ext in common_exts:
+                    cand2 = os.path.join(self.root_dir, fname + ext)
+                    if os.path.isfile(cand2):
+                        resolved.append((cand2, int(label)))
+                        found = True
+                        break
+                if found:
+                    continue
+
+            missing.append(orig)
+
+        self.records = resolved
+        if missing:
+            print(f"[WARN] {len(missing)} images listed in labels were not found under '{self.root_dir}'.")
+            # Print a small sample to help debugging
+            for nm in missing[:10]:
+                print(f"       - missing: {nm}")
 
     def __len__(self) -> int:
         return len(self.records)
 
     def __getitem__(self, idx: int):
-        fname, label = self.records[idx]
-        # Append .png if no extension
-        if os.path.splitext(fname)[1] == "":
-            fname = fname + ".png"
-        path = os.path.join(self.root_dir, fname)
+        path, label = self.records[idx]
         with Image.open(path) as img:
             img = img.convert("RGB")
         if self.transform is not None:
@@ -142,7 +204,7 @@ def get_checkpoint_pattern(model_key: str) -> str:
     elif model_key == "lstl":
         return "efficientnet_b0_lstl_clean_fold_{}.onnx"
     else:
-        raise ValueError(model_key)
+        raise ValueError(f"Unknown model key: {model_key}")
 
 
 def evaluate_model_folds(model_key: str, models_dir: str, images_dir: str, labels: List[Tuple[str, int]], out_dir: str,
