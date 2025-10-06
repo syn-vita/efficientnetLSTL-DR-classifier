@@ -113,13 +113,10 @@ const severityLevels = [
 export default function SeverityCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
-  const [flippedCards, setFlippedCards] = useState({})
+  const [showRealImages, setShowRealImages] = useState(false)
 
-  const toggleFlip = (levelId) => {
-    setFlippedCards(prev => ({
-      ...prev,
-      [levelId]: !prev[levelId]
-    }))
+  const toggleImageMode = () => {
+    setShowRealImages(prev => !prev)
   }
 
   // Auto-advance carousel
@@ -132,11 +129,6 @@ export default function SeverityCarousel() {
 
     return () => clearInterval(interval)
   }, [isAutoPlaying])
-
-  // Reset flip state when carousel changes
-  useEffect(() => {
-    setFlippedCards({})
-  }, [currentIndex])
 
   const goToSlide = (index) => {
     setCurrentIndex(index)
@@ -224,6 +216,18 @@ export default function SeverityCarousel() {
               <span>Grade 4: PDR</span>
             </div>
           </div>
+          
+          {/* View Mode Indicator */}
+          <div className="flex justify-center mt-4">
+            <div className={`px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2 transition-all duration-300 ${
+              showRealImages 
+                ? 'bg-blue-100 text-blue-800 border border-blue-200' 
+                : 'bg-gray-100 text-gray-600 border border-gray-200'
+            }`}>
+              <RotateCcw className="w-4 h-4" />
+              <span>Viewing: {showRealImages ? 'Real Medical Images' : 'Educational Infographics'}</span>
+            </div>
+          </div>
         </div>
 
         <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden">
@@ -238,9 +242,9 @@ export default function SeverityCarousel() {
                 <div 
                   key={currentLevel.id}
                   className="relative w-full h-80 cursor-pointer perspective-1000"
-                  onClick={() => toggleFlip(currentLevel.id)}
+                  onClick={toggleImageMode}
                 >
-                  <div className={`flip-card-inner w-full h-full transition-transform duration-700 preserve-3d ${flippedCards[currentLevel.id] ? 'rotate-y-180' : ''}`}>
+                  <div className={`flip-card-inner w-full h-full transition-transform duration-700 preserve-3d ${showRealImages ? 'rotate-y-180' : ''}`}>
                     {/* Front - Infographic */}
                     <div className="flip-card-face flip-card-front absolute inset-0 w-full h-full backface-hidden">
                       <img 
@@ -250,7 +254,7 @@ export default function SeverityCarousel() {
                       />
                       <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm flex items-center space-x-2">
                         <RotateCcw className="w-4 h-4" />
-                        <span>Click to see real image</span>
+                        <span>Click to see real images</span>
                       </div>
                     </div>
                     
@@ -263,7 +267,7 @@ export default function SeverityCarousel() {
                       />
                       <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm flex items-center space-x-2">
                         <RotateCcw className="w-4 h-4" />
-                        <span>Click to see infographic</span>
+                        <span>Click to see infographics</span>
                       </div>
                     </div>
                   </div>
