@@ -67,7 +67,6 @@ export default function ResultDisplay({ prediction, isLoading, modelName, error 
   }
 
   const predictedClass = drClasses[prediction.class]
-  const confidence = (prediction.confidence * 100).toFixed(1)
 
   const getResultIcon = () => {
     if (prediction.class === 0) {
@@ -127,12 +126,6 @@ export default function ResultDisplay({ prediction, isLoading, modelName, error 
           <p className="text-sm text-gray-600 mb-4 leading-relaxed">
             {predictedClass.description}
           </p>
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4">
-            <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              {confidence}%
-            </div>
-            <p className="text-sm text-gray-600 mt-1">Confidence Level</p>
-          </div>
         </div>
 
         {/* Severity Indicator */}
