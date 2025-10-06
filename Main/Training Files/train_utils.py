@@ -8,7 +8,7 @@ import torch
 from torch import nn
 from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 from torchvision import transforms
-from sklearn.metrics import classification_report, confusion_matrix, balanced_accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix
 import pandas as pd
 from PIL import Image
 from tqdm import tqdm
@@ -130,7 +130,7 @@ def train_model(
 ):
     since = time.time()
     best_wts = copy.deepcopy(model.state_dict())
-    best_bal_acc = 0.0
+    best_val_acc = 0.0
     epochs_no_improve = 0
     class_names = [str(i) for i in range(num_classes)]
 
@@ -186,8 +186,8 @@ def train_model(
 
             if phase == 'val':
                 print("\nValidation Metrics:")
-                balanced_acc = balanced_accuracy_score(all_labels, all_preds)
-                print(f"Balanced Accuracy: {balanced_acc:.4f}")
+                val_overall_acc = epoch_acc.item()
+                print(f"Overall Accuracy: {val_overall_acc:.4f}")
                 report_dict = classification_report(all_labels, all_preds, target_names=class_names, zero_division=0, output_dict=True)
                 print(classification_report(all_labels, all_preds, target_names=class_names, zero_division=0))
                 cm = confusion_matrix(all_labels, all_preds)
@@ -203,18 +203,18 @@ def train_model(
                         'precision': report_dict[class_label]['precision'],
                         'recall': report_dict[class_label]['recall'],
                         'f1-score': report_dict[class_label]['f1-score'],
-                        'balanced_accuracy': balanced_acc,
+                        'overall_accuracy': val_overall_acc,
                     })
                 print("Per-Class Accuracy:")
                 for i, acc in enumerate(per_class_acc):
                     print(f"  Class {i}: {acc:.4f}")
                 print("-" * 25)
 
-                if balanced_acc > best_bal_acc:
-                    best_bal_acc = balanced_acc
+                if val_overall_acc > best_val_acc:
+                    best_val_acc = val_overall_acc
                     best_wts = copy.deepcopy(model.state_dict())
                     epochs_no_improve = 0
-                    print(f"✨ New best balanced validation accuracy: {balanced_acc:.4f}. Saving model!")
+                    print(f"✨ New best overall validation accuracy: {val_overall_acc:.4f}. Saving model!")
                 else:
                     epochs_no_improve += 1
                 if epochs_no_improve >= patience:
@@ -229,7 +229,7 @@ def train_model(
 
     time_elapsed = time.time() - since
     print(f'Training complete in {time_elapsed // 60:.0f}m {time_elapsed % 60:.0f}s')
-    print(f'Best val Acc (balanced): {best_bal_acc:4f}')
+    print(f'Best Val Acc (overall): {best_val_acc:4f}')
     model.load_state_dict(best_wts)
     return model, history, metrics_log
 
