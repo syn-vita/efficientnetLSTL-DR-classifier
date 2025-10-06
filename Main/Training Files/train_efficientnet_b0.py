@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from typing import Optional
 import torch
 from torch import nn
 from torchvision.models import efficientnet_b0, EfficientNet_B0_Weights
@@ -28,21 +29,37 @@ except ImportError:
     )
 
 
-def main():
-    PROJECT_FOLDER = "C:/Users/Luigi/Desktop/code/Thesis/Main"
-    IMAGE_FOLDER_NAME = "images"
-    CSV_FILE_NAME = "dataset.csv"
+def main(image_dir: str, csv_path: str, out_dir: Optional[str] = None):
+    IMAGE_DIR = os.path.abspath(image_dir)
+    ANNOTATIONS_CSV = os.path.abspath(csv_path)
+    PROJECT_FOLDER = os.path.abspath(out_dir) if out_dir else os.path.dirname(ANNOTATIONS_CSV)
     PLOTS_FOLDER = os.path.join(PROJECT_FOLDER, "Figure Outputs", "EfficientNet-B0-clean")
     os.makedirs(PLOTS_FOLDER, exist_ok=True)
 
-    IMAGE_DIR = os.path.join(PROJECT_FOLDER, IMAGE_FOLDER_NAME)
-    ANNOTATIONS_CSV = os.path.join(PROJECT_FOLDER, CSV_FILE_NAME)
     if not os.path.isdir(IMAGE_DIR):
         raise FileNotFoundError(f"Image directory not found at: {IMAGE_DIR}")
     if not os.path.isfile(ANNOTATIONS_CSV):
         raise FileNotFoundError(f"Annotations CSV not found at: {ANNOTATIONS_CSV}")
 
-    all_labels_df = pd.read_csv(ANNOTATIONS_CSV, dtype={'id_code': str})
+    print(f"Using image folder: {IMAGE_DIR}")
+    print(f"Using annotations CSV: {ANNOTATIONS_CSV}")
+    print(f"Outputs will be saved under: {PROJECT_FOLDER}")
+
+    # Read only id_code and diagnosis; ignore extra columns if present
+    try:
+        base_df = pd.read_csv(ANNOTATIONS_CSV)
+        if {'id_code', 'diagnosis'}.issubset(base_df.columns):
+            all_labels_df = base_df[['id_code', 'diagnosis']].copy()
+        else:
+            # Fallback to first two columns and rename
+            base_df = pd.read_csv(ANNOTATIONS_CSV, usecols=[0, 1])
+            base_df.columns = ['id_code', 'diagnosis']
+            all_labels_df = base_df
+    except Exception:
+        # Last resort, try strict selection by name
+        all_labels_df = pd.read_csv(ANNOTATIONS_CSV, usecols=['id_code', 'diagnosis'])
+
+    all_labels_df['id_code'] = all_labels_df['id_code'].astype(str)
     all_labels_df = all_labels_df.rename(columns={'id_code': 'image_filename', 'diagnosis': 'label'})
     all_labels_df['image_filename'] = all_labels_df['image_filename'] + '.png'
     print(f"Loaded {len(all_labels_df)} records from {ANNOTATIONS_CSV}")
@@ -123,9 +140,23 @@ def main():
         )
         all_folds_metrics.extend(fold_metrics)
 
-        model_save_path = os.path.join(PROJECT_FOLDER, f"efficientnet_b0_clean_fold_{fold_num}.pth")
-        torch.save(trained_model.state_dict(), model_save_path)
-        print(f"Best model for fold {fold_num} saved to: {model_save_path}")
+        # Export trained model to ONNX instead of saving a .pth checkpoint
+        onnx_save_path = os.path.join(PROJECT_FOLDER, f"efficientnet_b0_clean_fold_{fold_num}.onnx")
+        try:
+            export_model = trained_model.to("cpu").eval()
+            dummy_input = torch.randn(1, 3, IMG_SIZE, IMG_SIZE, device="cpu")
+            torch.onnx.export(
+                export_model,
+                dummy_input,
+                onnx_save_path,
+                input_names=["input"],
+                output_names=["logits"],
+                dynamic_axes={"input": {0: "batch"}, "logits": {0: "batch"}},
+                opset_version=17,
+            )
+            print(f"Best model for fold {fold_num} exported to ONNX: {onnx_save_path}")
+        except Exception as e:
+            print(f"[ERROR] ONNX export failed for fold {fold_num}: {e}")
         plot_save_path = os.path.join(PLOTS_FOLDER, f"Fold{fold_num}_Figure.png")
         plot_history(history, fold_num, plot_save_path)
         print(f"Training history plot for fold {fold_num} saved to: {plot_save_path}")
@@ -138,4 +169,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    print("This training module is not meant to be run directly. Please use 'train_cli.py' to launch training.")
+    import sys as _sys
+    _sys.exit(2)
