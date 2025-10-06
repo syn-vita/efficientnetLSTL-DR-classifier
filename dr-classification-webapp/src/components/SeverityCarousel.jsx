@@ -115,10 +115,10 @@ export default function SeverityCarousel() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [flippedCards, setFlippedCards] = useState({})
 
-  const toggleFlip = (index) => {
+  const toggleFlip = (levelId) => {
     setFlippedCards(prev => ({
       ...prev,
-      [index]: !prev[index]
+      [levelId]: !prev[levelId]
     }))
   }
 
@@ -132,6 +132,11 @@ export default function SeverityCarousel() {
 
     return () => clearInterval(interval)
   }, [isAutoPlaying])
+
+  // Reset flip state when carousel changes
+  useEffect(() => {
+    setFlippedCards({})
+  }, [currentIndex])
 
   const goToSlide = (index) => {
     setCurrentIndex(index)
@@ -231,10 +236,11 @@ export default function SeverityCarousel() {
                 
                 {/* Flip Card Container */}
                 <div 
+                  key={currentLevel.id}
                   className="relative w-full h-80 cursor-pointer perspective-1000"
-                  onClick={() => toggleFlip(currentIndex)}
+                  onClick={() => toggleFlip(currentLevel.id)}
                 >
-                  <div className={`flip-card-inner w-full h-full transition-transform duration-700 preserve-3d ${flippedCards[currentIndex] ? 'rotate-y-180' : ''}`}>
+                  <div className={`flip-card-inner w-full h-full transition-transform duration-700 preserve-3d ${flippedCards[currentLevel.id] ? 'rotate-y-180' : ''}`}>
                     {/* Front - Infographic */}
                     <div className="flip-card-face flip-card-front absolute inset-0 w-full h-full backface-hidden">
                       <img 
