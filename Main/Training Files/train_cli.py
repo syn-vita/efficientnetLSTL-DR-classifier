@@ -45,16 +45,16 @@ def main():
         "3": "EfficientNet-B0 + LSTL",
     }
 
-    choice = prompt_choice(
-        "Select the model to train:",
-        {"1": names["1"], "2": names["2"], "3": names["3"]},
-    )
-    script_path = scripts[choice]
-    if not os.path.isfile(script_path):
-        print(f"Training script not found: {script_path}")
-        sys.exit(1)
-
-    print(f"\nSelected: {names[choice]}\n")
+    menu = {"1": names["1"], "2": names["2"], "3": names["3"], "4": "Train ALL (1, 2, 3)"}
+    choice = prompt_choice("Select the model to train:", menu)
+    if choice != "4":
+        script_path = scripts[choice]
+        if not os.path.isfile(script_path):
+            print(f"Training script not found: {script_path}")
+            sys.exit(1)
+        print(f"\nSelected: {names[choice]}\n")
+    else:
+        print("\nSelected: Train ALL models (baseline, CBAM, LSTL)\n")
 
     image_dir = prompt_path("Enter the path to the image folder: ", os.path.isdir)
     csv_path = prompt_path("Enter the path to the CSV file: ", os.path.isfile)
@@ -64,7 +64,10 @@ def main():
         os.makedirs(out_dir, exist_ok=True)
 
     print("\nSummary:")
-    print(f"  Model: {names[choice]}")
+    if choice == "4":
+        print("  Model: ALL (runs 1 -> 2 -> 3)")
+    else:
+        print(f"  Model: {names[choice]}")
     print(f"  Images: {image_dir}")
     print(f"  CSV:    {csv_path}")
     print(f"  Output: {out_dir if out_dir else os.path.dirname(csv_path)}")
@@ -75,19 +78,27 @@ def main():
         return
 
     print("\nStarting training...\n")
-    # Dynamically import the selected training module and call main(image_dir, csv_path, out_dir)
-    spec = importlib.util.spec_from_file_location("trainer_module", script_path)
-    if spec is None or spec.loader is None:
-        print("Failed to load trainer module.")
-        sys.exit(1)
-    mod = importlib.util.module_from_spec(spec)
-    sys.modules["trainer_module"] = mod
-    spec.loader.exec_module(mod)  # type: ignore[attr-defined]
-    if not hasattr(mod, "main"):
-        print("Trainer module does not define a main(image_dir, csv_path, out_dir) function.")
-        sys.exit(1)
-    # Call the trainer
-    mod.main(image_dir=image_dir, csv_path=csv_path, out_dir=out_dir)
+    def _run_trainer(script_path_: str):
+        spec_ = importlib.util.spec_from_file_location("trainer_module", script_path_)
+        if spec_ is None or spec_.loader is None:
+            print(f"Failed to load trainer module: {script_path_}")
+            sys.exit(1)
+        mod_ = importlib.util.module_from_spec(spec_)
+        sys.modules["trainer_module"] = mod_
+        spec_.loader.exec_module(mod_)  # type: ignore[attr-defined]
+        if not hasattr(mod_, "main"):
+            print("Trainer module does not define a main(image_dir, csv_path, out_dir) function.")
+            sys.exit(1)
+        mod_.main(image_dir=image_dir, csv_path=csv_path, out_dir=out_dir)
+
+    if choice == "4":
+        # Run all three trainers in order
+        for key in ["1", "2", "3"]:
+            print(f"\n=== Running {names[key]} ===\n")
+            _run_trainer(scripts[key])
+        print("\nAll trainings completed.\n")
+    else:
+        _run_trainer(script_path)
 
 
 if __name__ == "__main__":
