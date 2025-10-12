@@ -250,7 +250,7 @@ export default function LandingPage({ onStartTesting }) {
             </div>
             <div className="text-sm text-gray-400 text-center md:text-right">
               <p>Advanced AI for Medical Image Analysis</p>
-              <p className="mt-1">Thesis Research Project • 2024</p>
+              <p className="mt-1">Thesis Research Project • 2025</p>
             </div>
           </div>
         </div>
