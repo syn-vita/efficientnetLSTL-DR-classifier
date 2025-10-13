@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Eye, Brain, Zap, Shield, Award, ChevronRight, ArrowRight, Users, FileImage, BarChart3 } from 'lucide-react'
+import { Globe, Eye, Brain, Zap, Shield, Award, ChevronRight, ArrowRight, Users, FileImage, BarChart3, EyeOff, HeartPulse, AlertTriangle, CalendarCheck } from 'lucide-react'
 import SeverityCarousel from './SeverityCarousel'
 
 export default function LandingPage({ onStartTesting }) {
@@ -7,32 +7,32 @@ export default function LandingPage({ onStartTesting }) {
 
   const features = [
     {
-      icon: Brain,
-      title: "Advanced AI Models",
-      description: "Three state-of-the-art deep learning architectures: EfficientNet-B0 baseline, CBAM-enhanced, and LSTL-optimized models."
+      icon: Globe,
+      title: "A Growing Global Concern",
+      description: "DR is one of the the top global causes of vision loss, and its prevalence continues to rise with increasing diabetes cases. Without timely screening, many individuals remain undiagnosed until irreversible vision loss occurs."
     },
     {
-      icon: Zap,
-      title: "Real-time Analysis",
-      description: "Instant diabetic retinopathy classification with confidence scores and detailed probability distributions."
+      icon: EyeOff,
+      title: "How Vision Is Affected",
+      description: "Damage to the retinal blood vessels causes them to leak, swell, or close off entirely. This leads to blurred or distorted vision, and in advanced stages, severe retinal scarring or detachment."
     },
     {
-      icon: Shield,
-      title: "Medical Grade Accuracy",
-      description: "Models trained on clinical datasets for reliable diagnostic support."
+      icon: BarChart3,
+      title: "Stages of Progression",
+      description: "DR progresses gradually, from mild non-proliferative changes to severe proliferative stages, characterized by abnormal vessel growth. Each stage requires specific clinical attention and management."
     },
     {
-      icon: Award,
-      title: "Research-Backed",
-      description: "Implementation based on peer-reviewed research and best practices in medical AI applications."
+      icon: HeartPulse,
+      title: "Why Early Detection Saves Sight",
+      description: "Early diagnosis and intervention can reduce the risk of blindness. Regular retinal screening plays a vital role in preventing avoidable vision loss among diabetic patients."
     }
   ]
 
   const stats = [
-    { label: "Model Accuracy", value: "85%+", icon: BarChart3 },
-    { label: "Processing Speed", value: "<2s", icon: Zap },
-    { label: "DR Classes", value: "5", icon: FileImage },
-    { label: "Model Variants", value: "3", icon: Brain }
+    { label: "People Affected Worldwide", value: "100M+", icon: Globe },
+    { label: "Diabetic Patients Develop DR", value: "1 in 3", icon: Eye },
+    { label: "Preventable with Early Detection", value: "90%", icon: AlertTriangle },
+    { label: "Eye Exams Recommended for Diabetics", value: "Annual", icon: CalendarCheck }
   ]
 
   return (
@@ -42,33 +42,42 @@ export default function LandingPage({ onStartTesting }) {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-indigo-600/5"></div>
         <div className="relative max-w-7xl mx-auto px-4 py-20">
           <div className="text-center space-y-8">
-            {/* Logo and Title */}
-            <div className="flex justify-center">
-              <div className="flex items-center space-x-4">
-                <div className="relative">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <Eye className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
-                    <div className="w-2 h-2 bg-white rounded-full"></div>
-                  </div>
-                </div>
-                <div className="text-left">
-                  <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                    DR Classification
-                  </h1>
-                  <p className="text-lg text-gray-600 font-medium">AI-Powered Diabetic Retinopathy Analysis</p>
+            {/* Logo, Title, and Details */}
+            <div className="text-center mb-10">
+              {/* Icon Container*/}
+            <div className="relative mx-auto mb-6 w-fit">
+              {/* Eye Icon */}
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg relative">
+                <Eye className="w-8 h-8 text-white" />
+                {/* Small Circle Badge */}
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center ring-2 ring-white">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
                 </div>
               </div>
             </div>
 
-            {/* Subtitle */}
-            <div className="max-w-3xl mx-auto space-y-4">
-              <p className="text-xl md:text-2xl text-gray-700 leading-relaxed">
-                Advanced deep learning models for automated diabetic retinopathy classification
-              </p>
-              <p className="text-lg text-gray-600">
-                Leveraging EfficientNet architectures with attention mechanisms for precise medical image analysis
+              {/* Thesis Title */}
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-snug text-gray-900 max-w-4xl mx-auto">
+                Enhancing EfficientNet-B0 Using a Local-Global Transformer Layer for Diabetic Retinopathy Classification
+              </h1>
+
+              {/* Formal subtitles */}
+              <div className="mt-5">
+                <p className="text-lg md:text-xl text-gray-700 font-medium">
+                  A Thesis Presented to the Department of Computer Science
+                </p>
+                <p className="text-sm md:text-base text-gray-500 mt-1">
+                  In Partial Fulfillment of the Requirements for the Degree of<br />
+                  Bachelor of Science in Computer Science
+                </p>
+              </div>
+            </div>
+
+            {/* Authors */}
+            <div className="text-center text-gray-600 mb-8">
+              <p className="text-xs font-semibold uppercase tracking-wider mb-1">By</p>
+              <p className="text-sm md:text-base font-medium">
+                Ruzel Alano, Giancarlo Bajit, Angel Labuyo, Kevin Lugue, and Francesca Vega
               </p>
             </div>
 
@@ -94,7 +103,7 @@ export default function LandingPage({ onStartTesting }) {
       </section>
 
       {/* Stats Section */}
-      {/**<section className="py-16 bg-white border-y border-gray-100">
+      <section className="py-16 bg-white border-y border-gray-100">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
@@ -108,17 +117,18 @@ export default function LandingPage({ onStartTesting }) {
             ))}
           </div>
         </div>
-      </section> **/}
+      </section>
 
       {/* Features Section */}
       <section id="features" className="py-20">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Cutting-Edge AI Technology
+              Why Diabetic Retinopathy Matters
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Our research implements and compares multiple deep learning architectures for diabetic retinopathy classification
+              DR is one of the most common complications of diabetes and is one of the leading causes of preventable blindness.
+              Understanding its nature highlights why early detection and monitoring is important.
             </p>
           </div>
 
@@ -163,7 +173,7 @@ export default function LandingPage({ onStartTesting }) {
               Model Architecture Comparison
             </h2>
             <p className="text-xl text-gray-600">
-              Three distinct implementations for diabetic retinopathy classification
+              Three implementations of the DR Classification Tool, as per the Thesis' Statement of the Problem.
             </p>
           </div>
 
@@ -192,12 +202,12 @@ export default function LandingPage({ onStartTesting }) {
               }
             ].map((model, index) => (
               <div key={index} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2">
-                <div className={`w-12 h-12 bg-gradient-to-br ${model.color} rounded-xl flex items-center justify-center mb-6`}>
+                <div className={`w-12 h-12 bg-gradient-to-br ${model.color} rounded-xl flex items-center justify-center mb-6 mx-auto`}>
                   <Brain className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">{model.name}</h3>
-                <p className="text-gray-600 mb-6 leading-relaxed">{model.description}</p>
-                <div className="space-y-3">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">{model.name}</h3>
+                <p className="text-gray-600 mb-6 leading-relaxed text-center">{model.description}</p>
+                {/* <div className="space-y-3">
                   <div className="flex justify-between">
                     <span className="text-sm text-gray-500">Accuracy</span>
                     <span className="font-semibold text-gray-900">{model.accuracy}</span>
@@ -206,7 +216,7 @@ export default function LandingPage({ onStartTesting }) {
                     <span className="text-sm text-gray-500">Parameters</span>
                     <span className="font-semibold text-gray-900">{model.params}</span>
                   </div>
-                </div>
+                </div> */}
               </div>
             ))}
           </div>

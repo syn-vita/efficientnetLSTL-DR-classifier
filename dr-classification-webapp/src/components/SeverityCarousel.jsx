@@ -430,23 +430,45 @@ export default function SeverityCarousel() {
         </div>
 
         {/* Educational Information */}
-        <div className="mt-12 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">
-              Understanding Diabetic Retinopathy Classification
+        <div className="mt-16 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-3xl p-12 border border-blue-100">
+          <div className="max-w-6xl mx-auto">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+              Understanding Diabetic Retinopathy
             </h3>
-            <div className="grid md:grid-cols-3 gap-6 text-sm text-gray-700">
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-2">AI-Powered Detection</h4>
-                <p>Our deep learning models analyze retinal images to identify subtle patterns and features that indicate different stages of diabetic retinopathy progression.</p>
+            <p className="text-gray-700 text-lg text-center max-w-3xl mx-auto mb-12 leading-relaxed">
+              Early recognition and proper management of DR is vital in preventing vision loss. 
+              Awareness, regular screening, and timely treatment form the foundation of effective eye care for people with diabetes.
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-10 text-base text-gray-700">
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                <h4 className="font-semibold text-blue-900 mb-3 text-lg text-center">
+                  Schedule Regular Examinations
+                </h4>
+                <p className="leading-relaxed text-center">
+                  People with diabetes should undergo a comprehensive dilated eye exam at least once a year. 
+                  This allows experts to detect early retinal changes long before symptoms appear.
+                </p>
               </div>
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-2">Clinical Significance</h4>
-                <p>Early detection and classification are crucial for preventing vision loss. Each grade requires different monitoring intervals and treatment approaches.</p>
+
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                <h4 className="font-semibold text-blue-900 mb-3 text-lg text-center">
+                  Maintain Blood Sugar and Pressure
+                </h4>
+                <p className="leading-relaxed text-center">
+                  Keeping blood glucose, cholesterol, and blood pressure levels under control reduces the risk of DR progression. 
+                  Consistent medical follow-up helps protect not only vision but overall health.
+                </p>
               </div>
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-2">Research Impact</h4>
-                <p>This classification system helps standardize diagnosis and enables large-scale screening programs to identify at-risk patients efficiently.</p>
+
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300">
+                <h4 className="font-semibold text-blue-900 mb-3 text-lg text-center">
+                  Seek Prompt Medical Attention
+                </h4>
+                <p className="leading-relaxed text-center">
+                  If visual symptoms occur, patients should seek immediate eye evaluation. 
+                  Early interventions can preserve sight and slow disease progression.
+                </p>
               </div>
             </div>
           </div>
