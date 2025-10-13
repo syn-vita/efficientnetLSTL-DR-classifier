@@ -1,5 +1,6 @@
 # Ignore raw dataset and large artifacts
 APTOS 2019/
+Output/
 # Common training outputs
 *.pth
 *.ckpt
