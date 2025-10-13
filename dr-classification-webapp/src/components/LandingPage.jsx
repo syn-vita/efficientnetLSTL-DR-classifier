@@ -66,7 +66,7 @@ export default function LandingPage({ onStartTesting }) {
                 <p className="text-lg md:text-xl text-gray-700 font-medium">
                   A Thesis Presented to the Department of Computer Science
                 </p>
-                <p className="text-sm md:text-base text-gray-500 mt-1">
+                <p className="text-sm md:text-base text-gray-500 mt-1 pb-5">
                   In Partial Fulfillment of the Requirements for the Degree of<br />
                   Bachelor of Science in Computer Science
                 </p>
@@ -74,7 +74,7 @@ export default function LandingPage({ onStartTesting }) {
             </div>
 
             {/* Authors */}
-            <div className="text-center text-gray-600 mb-8">
+            <div className="text-center text-gray-600 mb-8 pb-5">
               <p className="text-xs font-semibold uppercase tracking-wider mb-1">By</p>
               <p className="text-sm md:text-base font-medium">
                 Ruzel Alano, Giancarlo Bajit, Angel Labuyo, Kevin Lugue, and Francesca Vega

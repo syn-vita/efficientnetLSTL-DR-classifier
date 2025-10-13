@@ -197,7 +197,7 @@ function App() {
       <footer className="border-t border-gray-200 bg-white mt-16">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <p className="text-center text-sm text-gray-600">
-            DR Classification Tool • For research and educational purposes only
+            DR Classification Tool • For Research and Educational Use Only
           </p>
         </div>
       </footer>
