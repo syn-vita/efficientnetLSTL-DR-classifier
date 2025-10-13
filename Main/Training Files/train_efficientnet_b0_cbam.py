@@ -190,7 +190,7 @@ def main(image_dir: str, csv_path: str, out_dir: Optional[str] = None):
 
         trained_model, history, fold_metrics = train_model(
             model, criterion, optimizer, dataloaders, dataset_sizes, device,
-            current_fold=fold_num, num_classes=NUM_CLASSES, num_epochs=NUM_EPOCHS, scheduler=scheduler, patience=8
+            current_fold=fold_num, num_classes=NUM_CLASSES, num_epochs=NUM_EPOCHS, scheduler=scheduler, patience=7
         )
         all_folds_metrics.extend(fold_metrics)
 
