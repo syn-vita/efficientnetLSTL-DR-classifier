@@ -19,7 +19,7 @@ export default function LandingPage({ onStartTesting }) {
     {
       icon: Shield,
       title: "Medical Grade Accuracy",
-      description: "Models trained on clinical datasets with validation accuracy exceeding 85% for reliable diagnostic support."
+      description: "Models trained on clinical datasets for reliable diagnostic support."
     },
     {
       icon: Award,
@@ -94,7 +94,7 @@ export default function LandingPage({ onStartTesting }) {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white border-y border-gray-100">
+      {/**<section className="py-16 bg-white border-y border-gray-100">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
@@ -108,7 +108,7 @@ export default function LandingPage({ onStartTesting }) {
             ))}
           </div>
         </div>
-      </section>
+      </section> **/}
 
       {/* Features Section */}
       <section id="features" className="py-20">
