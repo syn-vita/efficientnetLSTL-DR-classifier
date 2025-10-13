@@ -51,7 +51,7 @@ export default function ResultDisplay({ prediction, isLoading, modelName, error 
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Ready for Analysis</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Upload a retinal image to get started with AI-powered analysis.
+                  Upload a retinal image to get started with analysis.
                 </p>
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <p className="text-xs text-blue-700">
@@ -210,7 +210,7 @@ export default function ResultDisplay({ prediction, isLoading, modelName, error 
               Medical Disclaimer
             </h4>
             <p className="text-sm text-yellow-800 leading-relaxed">
-              This AI tool is designed for research and educational purposes only. Results should not be used as the sole basis for medical decisions. Always consult with qualified ophthalmologists for proper diagnosis and treatment of diabetic retinopathy.
+              This AI tool is designed for research and educational purposes only. Results should not be used as the sole basis for medical decisions.
             </p>
           </div>
         </div>

@@ -14,7 +14,7 @@ export const modelConfig = {
   cbam: {
     name: 'EfficientNet-B0 + CBAM',
     shortName: 'CBAM',
-    description: 'EfficientNet-B0 enhanced with Convolutional Block Attention Module for improved feature attention.',
+    description: 'EfficientNet-B0 enhanced with Convolutional Block Attention Module for improved feature extraction.',
     architecture: 'EfficientNet-B0 + CBAM',
   parameters: '4.22M',
   accuracy: 'Balanced accuracy (val, best epoch, fold 4): 68.77%',
@@ -25,7 +25,7 @@ export const modelConfig = {
   lstl: {
     name: 'EfficientNet-B0 + LSTL',
     shortName: 'LSTL',
-    description: 'EfficientNet-B0 with Lightweight Spatial-Temporal Learning block for enhanced spatial attention.',
+    description: 'EfficientNet-B0 with Local-Global Spatially-Aware Transformer Layer module for improved feature extraction and computational efficiency.',
     architecture: 'EfficientNet-B0 + LSTL',
   parameters: '4.05M',
   accuracy: 'Balanced accuracy (val, best epoch, fold 4): 67.19%',

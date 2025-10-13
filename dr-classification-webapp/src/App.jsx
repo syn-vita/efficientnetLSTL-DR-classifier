@@ -158,7 +158,7 @@ function App() {
               <p className="text-sm text-gray-600 mb-4">
                 {modelConfig[activeModel].description}
               </p>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Architecture:</span>
                   <span className="font-medium">{modelConfig[activeModel].architecture}</span>
@@ -178,7 +178,7 @@ function App() {
               </div>
               <p className="text-xs text-gray-500 mt-3">
                 Accuracy shown is balanced accuracy on the validation set at the best epoch for the selected fold.
-              </p>
+              </p> */}
             </div>
           </div>
 
@@ -197,7 +197,7 @@ function App() {
       <footer className="border-t border-gray-200 bg-white mt-16">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <p className="text-center text-sm text-gray-600">
-            Diabetic Retinopathy Classification Tool • For research and educational purposes
+            DR Classification Tool • For research and educational purposes only
           </p>
         </div>
       </footer>

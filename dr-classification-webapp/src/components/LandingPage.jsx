@@ -188,14 +188,14 @@ export default function LandingPage({ onStartTesting }) {
               },
               {
                 name: "CBAM Enhanced",
-                description: "EfficientNet-B0 with Convolutional Block Attention Module for improved feature selection.",
+                description: "EfficientNet-B0 with Convolutional Block Attention Module for improved feature extraction.",
                 accuracy: "85.7%",
                 params: "5.4M",
                 color: "from-blue-600 to-indigo-600"
               },
               {
                 name: "LSTL Optimized",
-                description: "EfficientNet-B0 with the Lightweight Spatial Transformer Layer for computational-efficiency.",
+                description: "EfficientNet-B0 with the Local-Global Spatially-Aware Transformer Layer for improved feature extraction and computational efficiency.",
                 accuracy: "84.9%",
                 params: "5.2M",
                 color: "from-emerald-600 to-green-600"
