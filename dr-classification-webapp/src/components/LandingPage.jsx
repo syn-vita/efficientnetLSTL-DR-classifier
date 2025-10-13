@@ -163,7 +163,7 @@ export default function LandingPage({ onStartTesting }) {
               Model Architecture Comparison
             </h2>
             <p className="text-xl text-gray-600">
-              Three distinct approaches to diabetic retinopathy classification
+              Three distinct implementations for diabetic retinopathy classification
             </p>
           </div>
 
@@ -185,7 +185,7 @@ export default function LandingPage({ onStartTesting }) {
               },
               {
                 name: "LSTL Optimized",
-                description: "Lightweight Spatial Temporal Learning implementation for efficient processing.",
+                description: "EfficientNet-B0 with the Lightweight Spatial Transformer Layer for computational-efficiency.",
                 accuracy: "84.9%",
                 params: "5.2M",
                 color: "from-emerald-600 to-green-600"
@@ -219,10 +219,10 @@ export default function LandingPage({ onStartTesting }) {
           <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-12 text-white text-center">
             <Users className="w-16 h-16 mx-auto mb-6 text-blue-200" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Research Impact & Applications
+              Social Impact & Applications
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
-              This research contributes to the advancement of automated medical image analysis, 
+              This research aims to contribute to the field of deep learning and computer-aided medical image analysis, 
               potentially improving early detection of diabetic retinopathy in clinical settings.
             </p>
             <button 
@@ -245,12 +245,12 @@ export default function LandingPage({ onStartTesting }) {
               </div>
               <div>
                 <div className="font-semibold">DR Classification Tool</div>
-                <div className="text-sm text-gray-400">Research & Educational Use</div>
+                <div className="text-sm text-gray-400">For Research & Educational Use Only</div>
               </div>
             </div>
             <div className="text-sm text-gray-400 text-center md:text-right">
-              <p>Advanced AI for Medical Image Analysis</p>
-              <p className="mt-1">Thesis Research Project • 2024</p>
+              <p>Enhancing EfficientNet-B0 Using A Local-Global Transformer Layer For Diabetic Retinopathy Classification</p>
+              <p className="mt-1">Alano • Bajit • Labuyo • Lugue • Vega • 2025</p>
             </div>
           </div>
         </div>
