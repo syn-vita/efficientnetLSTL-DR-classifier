@@ -226,13 +226,13 @@ export default function LandingPage({ onStartTesting }) {
       {/* Research Impact Section */}
       <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-12 text-white text-center">
-            <Users className="w-16 h-16 mx-auto mb-6 text-blue-200" />
+          <div className="bg-gradient-to-br from-sky-500 via-blue-500 to-indigo-500 rounded-3xl p-12 text-white text-center">
+            <Users className="w-16 h-16 mx-auto mb-6 text-blue-100" />
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Social Impact & Applications
+              Social Impact & Application
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
-              This research aims to contribute to the field of deep learning and computer-aided medical image analysis, 
+            <p className="text-xl text-blue-50 mb-8 max-w-3xl mx-auto leading-relaxed">
+              This research aims to contribute to the field of deep learning and computer-aided medical image analysis,
               potentially improving early detection of diabetic retinopathy in clinical settings.
             </p>
             <button 
