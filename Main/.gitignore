@@ -5,6 +5,7 @@ APTOS 2019/
 *.ckpt
 Evaluation_Results/*
 # Plots and logs (keep CSV summaries, but you can adjust)
+Output/
 Figure Outputs/*
 !Figure Outputs/*.csv
 messidor-2/*
