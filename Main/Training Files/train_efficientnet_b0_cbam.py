@@ -194,7 +194,14 @@ def main(image_dir: str, csv_path: str, out_dir: Optional[str] = None):
         )
         all_folds_metrics.extend(fold_metrics)
 
-        # Export trained model to ONNX instead of saving a .pth checkpoint
+        # Export checkpoints in both Torch (.pth) and ONNX formats
+        pth_save_path = os.path.join(PROJECT_FOLDER, f"efficientnet_b0_cbam_clean_fold_{fold_num}.pth")
+        try:
+            torch.save(trained_model.state_dict(), pth_save_path)
+            print(f"Best model for fold {fold_num} saved to: {pth_save_path}")
+        except Exception as e:
+            print(f"[ERROR] Torch checkpoint save failed for fold {fold_num}: {e}")
+
         onnx_save_path = os.path.join(PROJECT_FOLDER, f"efficientnet_b0_cbam_clean_fold_{fold_num}.onnx")
         try:
             export_model = trained_model.to("cpu").eval()
