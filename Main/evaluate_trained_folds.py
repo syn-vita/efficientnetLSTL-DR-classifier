@@ -4,6 +4,7 @@ import json
 import os
 import sys
 from dataclasses import dataclass
+import copy
 from typing import Dict, List, Optional, Sequence, Tuple
 
 import matplotlib
@@ -299,6 +300,30 @@ class FFN(nn.Module):
         return residual + x
 
 
+
+def _thop_first_tensor(inputs):
+    if isinstance(inputs, (list, tuple)):
+        for item in inputs:
+            if torch.is_tensor(item):
+                return item
+    elif torch.is_tensor(inputs):
+        return inputs
+    raise ValueError("Expected tensor input for THOP custom op handler")
+
+
+def _thop_count_elementwise(module, inputs, ops_per_element: int) -> None:
+    tensor = _thop_first_tensor(inputs)
+    numel = tensor.numel()
+    if not hasattr(module, "total_ops"):
+        module.total_ops = torch.DoubleTensor([0.0])
+    module.total_ops += torch.DoubleTensor([int(numel * ops_per_element)])
+
+
+def _count_cbam(module, inputs, output):
+    # Two element-wise multiplications (channel + spatial attention)
+    _thop_count_elementwise(module, inputs, ops_per_element=2)
+
+
 class LSTL(nn.Module):
     def __init__(self, in_channels):
         super().__init__()
@@ -315,6 +340,23 @@ class LSTL(nn.Module):
         x_hat = self.norm2(x)
         x = x + self.res2 * self.ffn(x_hat)
         return x
+
+
+def _count_saa(module, inputs, output):
+    # Two element-wise multiplies (with GSAB/LSAB outputs) plus one addition
+    _thop_count_elementwise(module, inputs, ops_per_element=3)
+
+
+def _count_lstl(module, inputs, output):
+    # Each residual branch: scalar multiply + addition (2 ops). Two branches => 4 ops/element.
+    _thop_count_elementwise(module, inputs, ops_per_element=4)
+
+
+THOP_CUSTOM_OPS = {
+    CBAM: _count_cbam,
+    SAA: _count_saa,
+    LSTL: _count_lstl,
+}
 
 
 class EfficientNetB0WithLSTL(nn.Module):
@@ -392,17 +434,17 @@ def measure_model_flops_thop(model: nn.Module, device: torch.device, img_size: i
     if thop_profile is None:
         return None
     try:
-        model_cpu = model.to("cpu")
+        model_cpu = copy.deepcopy(model).to("cpu")
         dummy = torch.zeros(1, 3, img_size, img_size)
         model_cpu.eval()
         with torch.no_grad():
-            macs, _ = thop_profile(model_cpu, inputs=(dummy,), verbose=False)
+            macs, _ = thop_profile(model_cpu, inputs=(dummy,), custom_ops=THOP_CUSTOM_OPS, verbose=False)
         gflops_val = float(macs) / 1e9
     except Exception as exc:
         print(f"[WARN] THOP FLOP measurement failed: {exc}")
         gflops_val = None
     finally:
-        model.to(device)
+        del model_cpu
     return gflops_val
 
 
@@ -410,7 +452,7 @@ def measure_model_flops_fvcore(model: nn.Module, device: torch.device, img_size:
     if FlopCountAnalysis is None:
         return None
     try:
-        model_cpu = model.to("cpu")
+        model_cpu = copy.deepcopy(model).to("cpu")
         dummy = torch.zeros(1, 3, img_size, img_size)
         with torch.no_grad():
             flops = FlopCountAnalysis(model_cpu, dummy).total()
@@ -419,7 +461,7 @@ def measure_model_flops_fvcore(model: nn.Module, device: torch.device, img_size:
         print(f"[WARN] fvcore FLOP measurement failed: {exc}")
         gflops_val = None
     finally:
-        model.to(device)
+        del model_cpu
     return gflops_val
 
 
