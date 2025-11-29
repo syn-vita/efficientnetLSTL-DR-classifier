@@ -4,6 +4,8 @@ Output/
 # Common training outputs
 *.pth
 *.ckpt
+*/*.pyc
+*.onnx
 Evaluation_Results/*
 # Plots and logs (keep CSV summaries, but you can adjust)
 Output/
