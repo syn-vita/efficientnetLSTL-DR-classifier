@@ -24,7 +24,7 @@ export const modelConfig = {
   },
   lstl: {
     name: 'EfficientNet-B0 + LSTL',
-    shortName: 'LSTL',
+    shortName: 'Othalvision-DR',
     description: 'EfficientNet-B0 with Local-Global Spatially-Aware Transformer Layer module for improved feature extraction and computational efficiency.',
     architecture: 'EfficientNet-B0 + LSTL',
   parameters: '4.05M',

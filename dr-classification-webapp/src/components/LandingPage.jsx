@@ -58,7 +58,7 @@ export default function LandingPage({ onStartTesting }) {
 
               {/* Thesis Title */}
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-snug text-gray-900 max-w-4xl mx-auto">
-                Enhancing EfficientNet-B0 Using a Local-Global Transformer Layer for Diabetic Retinopathy Classification
+                Opthalvision-DR
               </h1>
 
               {/* Formal subtitles */}
