@@ -7,9 +7,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 ACTIVE_PATHS = [
     ROOT / "scripts" / "train.py",
+    ROOT / "scripts" / "train_fundus_classifier.py",
     ROOT / "scripts" / "evaluate.py",
     ROOT / "scripts" / "export_onnx.py",
     ROOT / "scripts" / "smoke_check.py",
+    ROOT / "src" / "dr_thesis" / "binary_classifier" / "__init__.py",
+    ROOT / "src" / "dr_thesis" / "binary_classifier" / "training.py",
     ROOT / "src" / "dr_thesis" / "__init__.py",
     ROOT / "src" / "dr_thesis" / "paths.py",
     ROOT / "dr-classification-webapp" / "src" / "config" / "models.js",
@@ -22,6 +25,9 @@ TASK1_REQUIRED_PATHS = [
     ROOT / "data" / "train.csv",
     ROOT / "data" / "valid.csv",
     ROOT / "data" / "test.csv",
+    ROOT / "data" / "legacy" / "README.md",
+    ROOT / "data" / "legacy" / "aptos2019_labels.csv",
+    ROOT / "data" / "legacy" / "messidor_data.csv",
     ROOT / "docs" / "references" / "README.md",
     ROOT / "docs" / "references" / "BAM Bottleneck Attention Module.pdf",
     ROOT / "docs" / "references" / "EfficientNet with Hybrid Attention Mechanisms for.pdf",
@@ -44,15 +50,19 @@ TASK1_MOVED_AWAY_PATHS = [
     ROOT / "valid.csv",
     ROOT / "test.csv",
     ROOT / "Reference Files",
+    ROOT / "Main" / "dataset.csv",
+    ROOT / "Main" / "messidor_data.csv",
 ]
 
 CLEAN_BREAK_REMOVED_PATHS = [
+    ROOT / "Main",
     ROOT / "legacy",
     ROOT / "Main" / "Training Files",
     ROOT / "Main" / "evaluate_trained_folds.py",
     ROOT / "Main" / "export_all_folds_to_onnx.py",
     ROOT / "Main" / "EvalResults2",
     ROOT / "Main" / "Model Files" / "Figure Outputs",
+    ROOT / "Main" / "binary_classifier",
 ]
 
 FORBIDDEN_SOURCE_REFERENCES = {
@@ -103,16 +113,24 @@ def main() -> int:
             if snippet in text:
                 errors += fail(f"Forbidden legacy path reference still present in {path.relative_to(ROOT)}: {snippet}")
 
-    models_js = ROOT / "dr-classification-webapp" / "src" / "config" / "models.js"
-    if models_js.exists():
-        text = models_js.read_text(encoding="utf-8")
-        for model_name in [
+    webapp_model_references = {
+        ROOT / "dr-classification-webapp" / "src" / "config" / "models.js": [
             "/models/efficientnet_b0_clean_fold_3.onnx",
             "/models/efficientnet_b0_cbam_clean_fold_4.onnx",
             "/models/efficientnet_b0_lstl_clean_fold_4.onnx",
-        ]:
+        ],
+        ROOT / "dr-classification-webapp" / "src" / "components" / "ImageUpload.jsx": [
+            "/models/fundus_classifier_efficientnet_b3.onnx",
+        ],
+    }
+    for path, model_names in webapp_model_references.items():
+        if not path.exists():
+            errors += fail(f"Missing web app source file for model-path check: {path.relative_to(ROOT)}")
+            continue
+        text = path.read_text(encoding="utf-8")
+        for model_name in model_names:
             if model_name not in text:
-                errors += fail(f"Web app config missing expected model path: {model_name}")
+                errors += fail(f"Web app source missing expected model path: {model_name} in {path.relative_to(ROOT)}")
 
     if errors:
         print(f"[FAIL] smoke_check found {errors} issue(s)")
