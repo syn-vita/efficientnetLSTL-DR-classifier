@@ -10,12 +10,10 @@ artifacts/checkpoints/**
 artifacts/evaluation/**
 artifacts/exports/**
 artifacts/figures/**
+artifacts/archive/**
 !artifacts/**/.gitkeep
+!artifacts/archive/**
 
-# Existing training output folders
-Main/Evaluation_Results/
-Main/Figure Outputs/
-Output/
+# Local dataset/image folders
 APTOS 2019/
 messidor-2/
-
