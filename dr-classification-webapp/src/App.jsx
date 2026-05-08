@@ -158,7 +158,7 @@ function App() {
                       onClick={() => onModelChangeHelper(key, setActiveModel)}
                       className={`w-full rounded-[26px] border px-5 py-4 text-left transition-all duration-200 ${
                         isActive
-                          ? 'border-teal-200 bg-white shadow-sm'
+                          ? 'border-2 border-teal-500 bg-teal-50/70 shadow-[0_0_0_4px_rgba(16,152,173,0.12)]'
                           : 'border-slate-200 bg-white/75 hover:border-slate-300 hover:bg-white'
                       }`}
                     >
