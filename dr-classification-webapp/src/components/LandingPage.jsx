@@ -51,7 +51,7 @@ const models = [
     name: 'EfficientNet-B0 + LSTL',
     label: 'Recommended Thesis Variant',
     description:
-      'The featured implementation integrates a Local-Global Spatially-Aware Transformer Layer to improve representation quality while preserving the EfficientNet-B0 backbone.',
+      'Integrates a Local-Global Spatially-Aware Transformer Layer while preserving the EfficientNet-B0 backbone.',
     accent: 'from-teal-600 to-cyan-500'
   },
   {
@@ -96,9 +96,8 @@ export default function LandingPage({ onStartTesting }) {
                   {thesisTitle}
                 </h1>
                 <p className="max-w-3xl text-lg leading-8 text-slate-600 md:text-xl">
-                  A guided medical web interface for retinal fundus image classification across baseline,
-                  CBAM, and LSTL-enhanced EfficientNet-B0 variants, designed to foreground screening
-                  clarity before academic detail.
+                  Web-based retinal fundus image classification across baseline, CBAM, and
+                  LSTL-enhanced EfficientNet-B0 variants for research and educational use.
                 </p>
               </div>
 
@@ -137,10 +136,10 @@ export default function LandingPage({ onStartTesting }) {
                   </div>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">
-                      Featured thesis workflow
+                      Featured analysis
                     </p>
                     <h2 className="mt-1 text-xl font-semibold text-slate-950">
-                      LSTL-guided retinal image analysis
+                      Retinal image analysis
                     </h2>
                   </div>
                 </div>
@@ -160,8 +159,8 @@ export default function LandingPage({ onStartTesting }) {
                     </div>
                   </div>
                   <p className="mt-4 leading-7 text-slate-600">
-                    The thesis-highlighted variant is presented first to support a more focused product
-                    narrative while keeping the baseline and CBAM comparators accessible.
+                    LSTL is presented as the recommended model, while Baseline and CBAM remain
+                    available for comparison.
                   </p>
                 </div>
 
@@ -184,15 +183,14 @@ export default function LandingPage({ onStartTesting }) {
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-slate-950">Guided testing flow</p>
-                        <p className="text-sm text-slate-500">Upload first, interpret second</p>
+                        <p className="text-sm text-slate-500">Upload, analyze, compare</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <p className="text-sm leading-7 text-slate-500">
-                  Built for thesis demonstration, visual clarity, and educational interpretation rather
-                  than production clinical deployment.
+                  Designed for research and educational interpretation, not production clinical use.
                 </p>
               </div>
             </div>
@@ -224,8 +222,8 @@ export default function LandingPage({ onStartTesting }) {
             <span className="eyebrow">Why it matters</span>
             <h2 className="section-title mt-4">Diabetic retinopathy screening benefits from timely, readable decision support</h2>
             <p className="section-copy mt-4">
-              The thesis UI should explain the medical relevance clearly before asking users to interact
-              with models, helping the app feel more clinical and less like a generic demo page.
+              Early recognition and clear grading support timely follow-up, referral, and ongoing
+              monitoring for people at risk of diabetic retinopathy.
             </p>
           </div>
 
@@ -262,10 +260,10 @@ export default function LandingPage({ onStartTesting }) {
           <div className="mb-12 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-3xl">
               <span className="eyebrow">Model overview</span>
-              <h2 className="section-title mt-4">Three thesis variants, with LSTL foregrounded as the primary experience</h2>
+              <h2 className="section-title mt-4">Three model variants for diabetic retinopathy classification</h2>
               <p className="section-copy mt-4">
-                The redesign keeps baseline and CBAM available for comparison, but the public-facing
-                presentation should clearly lead with the thesis-highlighted LSTL approach.
+                Baseline, CBAM, and LSTL variants are available for comparison, with LSTL presented
+                as the recommended primary model.
               </p>
             </div>
             <button onClick={onStartTesting} className="btn-primary w-fit">
@@ -331,10 +329,10 @@ export default function LandingPage({ onStartTesting }) {
             <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <div>
                 <span className="eyebrow">Academic context</span>
-                <h2 className="section-title mt-4">Thesis framing remains present, but no longer dominates the top of the interface</h2>
+                <h2 className="section-title mt-4">Academic and thesis context</h2>
                 <p className="section-copy mt-4">
-                  This section preserves the university and authorship context while keeping the landing
-                  experience focused on medical classification and interaction flow.
+                  University, authorship, and degree context are included here as supporting information
+                  for the project and its research setting.
                 </p>
               </div>
 
@@ -375,8 +373,8 @@ export default function LandingPage({ onStartTesting }) {
             </div>
           </div>
           <p className="max-w-xl text-sm leading-6 text-slate-500 md:text-right">
-            Built to support clearer demonstration of baseline, CBAM, and LSTL-enhanced diabetic
-            retinopathy classification workflows.
+            Supports comparison of baseline, CBAM, and LSTL-enhanced diabetic retinopathy
+            classification models.
           </p>
         </div>
       </footer>

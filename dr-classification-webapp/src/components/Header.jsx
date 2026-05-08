@@ -31,7 +31,7 @@ export default function Header({ onBackToLanding, showBackButton = false }) {
         </div>
 
         <p className="hidden max-w-sm text-right text-sm leading-6 text-slate-500 lg:block">
-          Guided retinal image testing with LSTL surfaced first and the comparison models kept available.
+          Retinal image analysis across the available thesis model variants.
         </p>
       </div>
     </header>

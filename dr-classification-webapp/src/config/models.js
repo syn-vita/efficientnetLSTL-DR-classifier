@@ -5,7 +5,7 @@ export const modelConfig = {
     shortName: 'LSTL',
     badge: 'Recommended',
     description:
-      'The thesis-highlighted EfficientNet-B0 variant integrates a Local-Global Spatially-Aware Transformer Layer for the primary research-facing experience.',
+      'EfficientNet-B0 with a Local-Global Spatially-Aware Transformer Layer.',
     architecture: 'EfficientNet-B0 + LSTL',
     parameters: '4.05M',
     accuracy: 'Balanced accuracy (val, best epoch, fold 4): 67.19%',
@@ -31,7 +31,7 @@ export const modelConfig = {
     shortName: 'CBAM',
     badge: 'Alternative',
     description:
-      'The CBAM-enhanced EfficientNet-B0 variant provides an attention-based comparison point within the thesis workflow.',
+      'EfficientNet-B0 enhanced with a Convolutional Block Attention Module.',
     architecture: 'EfficientNet-B0 + CBAM',
     parameters: '4.22M',
     accuracy: 'Balanced accuracy (val, best epoch, fold 4): 68.77%',

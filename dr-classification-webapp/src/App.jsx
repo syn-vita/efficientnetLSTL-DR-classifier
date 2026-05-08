@@ -112,11 +112,11 @@ function App() {
             <div className="border-b border-slate-200/80 px-6 py-6 lg:border-b-0 lg:border-r">
               <span className="eyebrow">Testing workspace</span>
               <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl">
-                Guided model comparison with LSTL surfaced first
+                Model comparison and retinal image analysis
               </h2>
               <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
-                The testing screen now leads with the thesis-highlighted LSTL configuration, while
-                Baseline and CBAM remain available as secondary comparison paths.
+                Select a model, upload a retinal fundus image, and review the resulting
+                classification output and severity assessment.
               </p>
 
               <div className="mt-6 grid gap-4 sm:grid-cols-3">

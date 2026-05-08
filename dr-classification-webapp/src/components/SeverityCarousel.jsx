@@ -196,8 +196,8 @@ export default function SeverityCarousel() {
           <span className="eyebrow">Severity reference</span>
           <h2 className="section-title mt-4">Diabetic retinopathy grading overview</h2>
           <p className="section-copy mt-4">
-            This section keeps the educational severity reference intact while presenting it inside the
-            same calmer clinical system used across the redesigned landing page.
+            Reference guide to the retinal findings and severity levels commonly used in diabetic
+            retinopathy grading.
           </p>
         </div>
 
