@@ -101,26 +101,10 @@ def build_export_plan(models: Iterable[str], pth_dir: str, out_dir: str) -> list
 
 
 def infer_default_pth_dir() -> str:
-    candidates = [
-        CHECKPOINTS_DIR,
-        REPO_ROOT / "Main" / "Outputs",
-        REPO_ROOT / "Outputs",
-    ]
-    for candidate in candidates:
-        if candidate.is_dir():
-            return str(candidate)
     return str(CHECKPOINTS_DIR)
 
 
 def infer_default_out_dir() -> str:
-    candidates = [
-        EXPORTS_DIR,
-        REPO_ROOT / "Main" / "Outputs",
-        REPO_ROOT / "Outputs",
-    ]
-    for candidate in candidates:
-        if candidate.is_dir():
-            return str(candidate)
     return str(EXPORTS_DIR)
 
 
@@ -136,12 +120,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--pth-dir",
         default=infer_default_pth_dir(),
-        help="Directory containing .pth checkpoints. Default: detected repo checkpoints folder, preferring artifacts/checkpoints.",
+        help="Directory containing .pth checkpoints. Default: artifacts/checkpoints.",
     )
     parser.add_argument(
         "--out-dir",
         default=infer_default_out_dir(),
-        help="Directory to write .onnx files. Default: detected repo export folder, preferring artifacts/exports.",
+        help="Directory to write .onnx files. Default: artifacts/exports.",
     )
     parser.add_argument("--print-only", action="store_true", help="Only print actions without performing export.")
     return parser.parse_args(argv)

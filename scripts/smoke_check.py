@@ -5,15 +5,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-LEGACY_PATHS = [
-    ROOT / "Main" / "Training Files" / "train_cli.py",
-    ROOT / "Main" / "evaluate_trained_folds.py",
-    ROOT / "Main" / "export_all_folds_to_onnx.py",
+ACTIVE_PATHS = [
+    ROOT / "scripts" / "train.py",
+    ROOT / "scripts" / "evaluate.py",
+    ROOT / "scripts" / "export_onnx.py",
+    ROOT / "scripts" / "smoke_check.py",
+    ROOT / "src" / "dr_thesis" / "__init__.py",
+    ROOT / "src" / "dr_thesis" / "paths.py",
     ROOT / "dr-classification-webapp" / "src" / "config" / "models.js",
 ]
 
 TASK1_REQUIRED_PATHS = [
-    ROOT / "scripts" / "smoke_check.py",
     ROOT / "data" / ".gitkeep",
     ROOT / "data" / "README.md",
     ROOT / "data" / "dataset.csv",
@@ -39,6 +41,24 @@ TASK1_MOVED_AWAY_PATHS = [
     ROOT / "Reference Files",
 ]
 
+CLEAN_BREAK_REMOVED_PATHS = [
+    ROOT / "legacy",
+    ROOT / "Main" / "Training Files",
+    ROOT / "Main" / "evaluate_trained_folds.py",
+    ROOT / "Main" / "export_all_folds_to_onnx.py",
+]
+
+FORBIDDEN_SOURCE_REFERENCES = {
+    ROOT / "src" / "dr_thesis" / "evaluation" / "folds.py": [
+        'REPO_ROOT / "Main" / "output 2"',
+        'REPO_ROOT / "Main" / "Outputs"',
+        'REPO_ROOT / "Main" / "Model Files" / "pth"',
+    ],
+    ROOT / "src" / "dr_thesis" / "export" / "onnx.py": [
+        'REPO_ROOT / "Main" / "Outputs"',
+    ],
+}
+
 
 def fail(msg: str) -> int:
     print(f"[FAIL] {msg}")
@@ -47,7 +67,7 @@ def fail(msg: str) -> int:
 
 def main() -> int:
     errors = 0
-    for path in LEGACY_PATHS:
+    for path in ACTIVE_PATHS:
         if not path.exists():
             errors += fail(f"Missing required path: {path.relative_to(ROOT)}")
 
@@ -58,6 +78,19 @@ def main() -> int:
     for path in TASK1_MOVED_AWAY_PATHS:
         if path.exists():
             errors += fail(f"Task 1 path should have been moved or removed: {path.relative_to(ROOT)}")
+
+    for path in CLEAN_BREAK_REMOVED_PATHS:
+        if path.exists():
+            errors += fail(f"Legacy path should have been removed: {path.relative_to(ROOT)}")
+
+    for path, snippets in FORBIDDEN_SOURCE_REFERENCES.items():
+        if not path.exists():
+            errors += fail(f"Missing source file for regression guard: {path.relative_to(ROOT)}")
+            continue
+        text = path.read_text(encoding="utf-8")
+        for snippet in snippets:
+            if snippet in text:
+                errors += fail(f"Forbidden legacy path reference still present in {path.relative_to(ROOT)}: {snippet}")
 
     models_js = ROOT / "dr-classification-webapp" / "src" / "config" / "models.js"
     if models_js.exists():
@@ -74,7 +107,7 @@ def main() -> int:
         print(f"[FAIL] smoke_check found {errors} issue(s)")
         return 1
 
-    print("[PASS] smoke_check verified Task 1 paths, moved boundaries, and webapp model references")
+    print("[PASS] smoke_check verified active script entry points, cleaned boundaries, source path guards, and webapp model references")
     return 0
 
 

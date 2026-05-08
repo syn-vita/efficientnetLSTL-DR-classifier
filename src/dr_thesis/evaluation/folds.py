@@ -523,17 +523,6 @@ def prompt_int_with_default(message: str, default: int, min_value: int) -> int:
 
 def infer_default_models_dir(script_path: str | None = None) -> str:
     del script_path
-    candidates = [
-        CHECKPOINTS_DIR,
-        REPO_ROOT / "Main" / "output 2",
-        REPO_ROOT / "Main" / "Outputs",
-        REPO_ROOT / "Main" / "Model Files" / "pth",
-        REPO_ROOT / "output 2",
-        REPO_ROOT / "Outputs",
-    ]
-    for candidate in candidates:
-        if candidate.is_dir():
-            return str(candidate)
     return str(CHECKPOINTS_DIR)
 
 
@@ -571,7 +560,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--labels-path", help="Path to the labels file (.csv, .tsv, or .dat).")
     parser.add_argument(
         "--models-dir",
-        help="Path to the directory containing .pth checkpoints. Defaults to the detected repo checkpoints folder.",
+        help="Path to the directory containing .pth checkpoints. Default: artifacts/checkpoints.",
     )
     parser.add_argument(
         "--out-dir",
