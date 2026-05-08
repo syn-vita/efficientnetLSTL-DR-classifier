@@ -16,7 +16,7 @@ import {
 } from 'lucide-react'
 import SeverityCarousel from './SeverityCarousel'
 
-const thesisTitle = 'Thesis: Integrating LSTL with EfficientNetB0 for Diabetic Retinopathy Classification'
+const thesisTitle = 'Thesis: Integrating EfficientNetB0 with LSTL for Diabetic Retinopathy Classification'
 
 const overviewStats = [
   { label: 'People affected worldwide', value: '100M+', icon: Globe },
