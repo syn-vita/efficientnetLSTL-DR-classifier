@@ -33,6 +33,11 @@ TASK1_REQUIRED_PATHS = [
     ROOT / "artifacts" / "figures" / ".gitkeep",
 ]
 
+ARCHIVE_PATHS = [
+    ROOT / "artifacts" / "archive" / "evalresults2",
+    ROOT / "artifacts" / "archive" / "figure-outputs",
+]
+
 TASK1_MOVED_AWAY_PATHS = [
     ROOT / "dataset.csv",
     ROOT / "train.csv",
@@ -46,6 +51,8 @@ CLEAN_BREAK_REMOVED_PATHS = [
     ROOT / "Main" / "Training Files",
     ROOT / "Main" / "evaluate_trained_folds.py",
     ROOT / "Main" / "export_all_folds_to_onnx.py",
+    ROOT / "Main" / "EvalResults2",
+    ROOT / "Main" / "Model Files" / "Figure Outputs",
 ]
 
 FORBIDDEN_SOURCE_REFERENCES = {
@@ -74,6 +81,10 @@ def main() -> int:
     for path in TASK1_REQUIRED_PATHS:
         if not path.exists():
             errors += fail(f"Missing Task 1 path: {path.relative_to(ROOT)}")
+
+    for path in ARCHIVE_PATHS:
+        if not path.exists():
+            errors += fail(f"Missing archived historical output path: {path.relative_to(ROOT)}")
 
     for path in TASK1_MOVED_AWAY_PATHS:
         if path.exists():
