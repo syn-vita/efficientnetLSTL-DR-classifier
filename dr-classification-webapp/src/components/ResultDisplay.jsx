@@ -1,24 +1,22 @@
-import { AlertTriangle, CheckCircle, Eye, BarChart3, Activity } from 'lucide-react'
+import { Activity, AlertTriangle, BarChart3, CheckCircle, Eye, ShieldAlert } from 'lucide-react'
 import { drClasses } from '../config/models'
 
 export default function ResultDisplay({ prediction, isLoading, modelName, error }) {
   if (isLoading) {
     return (
-      <div className="card">
-        <div className="flex items-center justify-center py-12">
+      <div className="diagnostic-card">
+        <div className="flex items-center justify-center py-14">
           <div className="text-center">
-            <div className="relative">
-              <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
-              <Activity className="w-6 h-6 text-blue-600 absolute top-3 left-3" />
+            <div className="relative mx-auto mb-5 h-14 w-14">
+              <div className="h-14 w-14 animate-spin rounded-full border-4 border-cyan-100 border-t-cyan-600" />
+              <Activity className="absolute left-4 top-4 h-6 w-6 text-cyan-700" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Analyzing Image</h3>
-            <p className="text-sm text-gray-600">
-              {modelName} is processing your retinal image...
+            <h3 className="text-xl font-semibold text-slate-950">Analyzing image</h3>
+            <p className="mt-3 text-sm leading-7 text-slate-600">
+              {modelName} is processing the retinal image and preparing a classification result.
             </p>
-            <div className="mt-4 bg-blue-50 rounded-lg p-3">
-              <p className="text-xs text-blue-700">
-                Deep learning model extracting features and patterns
-              </p>
+            <div className="mt-5 inline-flex rounded-full border border-cyan-100 bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-800">
+              Deep learning model extracting retinal features
             </div>
           </div>
         </div>
@@ -28,35 +26,31 @@ export default function ResultDisplay({ prediction, isLoading, modelName, error 
 
   if (!prediction) {
     return (
-      <div className="card">
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
+      <div className="diagnostic-card">
+        <div className="flex items-center justify-center py-14">
+          <div className="max-w-md text-center">
             {error ? (
               <>
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <AlertTriangle className="w-8 h-8 text-red-600" />
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-[22px] bg-rose-50 text-rose-700">
+                  <AlertTriangle className="h-8 w-8" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Analysis Error</h3>
-                <p className="text-sm text-gray-600 max-w-md mx-auto mb-4">{error}</p>
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                  <p className="text-xs text-red-700">
-                    Please try uploading a different image or selecting another model
-                  </p>
+                <h3 className="text-xl font-semibold text-slate-950">Analysis error</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{error}</p>
+                <div className="mt-5 rounded-[24px] border border-rose-200 bg-rose-50/80 p-4 text-sm leading-7 text-rose-800">
+                  Please try a different image or switch to another available model variant.
                 </div>
               </>
             ) : (
               <>
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Eye className="w-8 h-8 text-gray-400" />
+                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-[22px] bg-slate-100 text-slate-500">
+                  <Eye className="h-8 w-8" />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Ready for Analysis</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Upload a retinal image to get started with analysis.
+                <h3 className="text-xl font-semibold text-slate-950">Ready for analysis</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">
+                  Upload a retinal fundus image to generate classification output, severity context, and a clinical recommendation.
                 </p>
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-xs text-blue-700">
-                    Supported formats: JPG, PNG, JPEG • Recommended: High resolution fundus images
-                  </p>
+                <div className="mt-5 rounded-[24px] border border-cyan-100 bg-cyan-50/80 p-4 text-sm leading-7 text-cyan-900">
+                  Supported formats: JPG, PNG, JPEG. High-resolution fundus images are recommended for clearer interpretation.
                 </div>
               </>
             )}
@@ -67,154 +61,180 @@ export default function ResultDisplay({ prediction, isLoading, modelName, error 
   }
 
   const predictedClass = drClasses[prediction.class]
+  const probabilityLabels = ['No DR', 'Mild', 'Moderate', 'Severe', 'PDR']
 
   const getResultIcon = () => {
     if (prediction.class === 0) {
-      return <CheckCircle className="w-8 h-8 text-green-600" />
+      return <CheckCircle className="h-9 w-9 text-emerald-600" />
     }
-    return <AlertTriangle className="w-8 h-8 text-yellow-600" />
+    return <AlertTriangle className="h-9 w-9 text-amber-600" />
   }
 
   const getResultBadgeClass = () => {
     switch (prediction.class) {
-      case 0: return 'result-no-dr'
-      case 1: return 'result-mild'
-      case 2: return 'result-moderate'
-      case 3: return 'result-severe'
-      case 4: return 'result-proliferative'
-      default: return 'result-no-dr'
+      case 0:
+        return 'result-no-dr'
+      case 1:
+        return 'result-mild'
+      case 2:
+        return 'result-moderate'
+      case 3:
+        return 'result-severe'
+      case 4:
+        return 'result-proliferative'
+      default:
+        return 'result-no-dr'
     }
   }
 
   const getSeverityColor = () => {
     switch (prediction.class) {
-      case 0: return 'bg-green-500'
-      case 1: return 'bg-yellow-500'
-      case 2: return 'bg-orange-500'
-      case 3: return 'bg-red-500'
-      case 4: return 'bg-red-600'
-      default: return 'bg-green-500'
+      case 0:
+        return 'bg-emerald-500'
+      case 1:
+        return 'bg-amber-500'
+      case 2:
+        return 'bg-orange-500'
+      case 3:
+        return 'bg-rose-500'
+      case 4:
+        return 'bg-red-700'
+      default:
+        return 'bg-emerald-500'
     }
   }
 
   return (
     <div className="space-y-6">
-      {/* Main Result */}
-      <div className="card transform transition-all duration-300 hover:scale-[1.02]">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
-            <Activity className="w-5 h-5 text-blue-600" />
-            <span>Classification Result</span>
-          </h2>
-          <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+      <section className="diagnostic-card">
+        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">Classification result</p>
+            <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{predictedClass.name}</h2>
+          </div>
+          <span className="inline-flex w-fit rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">
             {modelName}
           </span>
         </div>
 
-        <div className="text-center mb-6">
-          <div className="flex items-center justify-center mb-4">
-            <div className="relative">
-              {getResultIcon()}
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-600 rounded-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
+        <div className="diagnostic-summary">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="mt-1 flex h-14 w-14 items-center justify-center rounded-[22px] bg-white shadow-sm">
+                {getResultIcon()}
+              </div>
+              <div>
+                <div className={`${getResultBadgeClass()} text-sm`}>{predictedClass.severity}</div>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600">{predictedClass.description}</p>
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2 lg:w-[20rem] lg:grid-cols-1">
+              <div className="rounded-3xl border border-slate-200 bg-white/90 px-4 py-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Predicted grade</p>
+                <p className="mt-2 text-2xl font-semibold text-slate-950">Grade {prediction.class}/4</p>
+              </div>
+              <div className="rounded-3xl border border-slate-200 bg-white/90 px-4 py-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Top confidence</p>
+                <p className="mt-2 text-2xl font-semibold text-slate-950">{(prediction.confidence * 100).toFixed(1)}%</p>
               </div>
             </div>
           </div>
-          <div className={`${getResultBadgeClass()} text-lg font-semibold mb-3 transform transition-all duration-300 hover:scale-105`}>
-            {predictedClass.name}
-          </div>
-          <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-            {predictedClass.description}
-          </p>
-        </div>
 
-        {/* Severity Indicator */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-gray-700">Severity Assessment</span>
-            <span className="text-sm text-gray-600 bg-white px-2 py-1 rounded">
-              Grade {prediction.class}/4
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-            <div 
-              className={`h-3 rounded-full ${getSeverityColor()} transition-all duration-1000 ease-out`}
-              style={{ width: `${((prediction.class + 1) / 5) * 100}%` }}
-            ></div>
-          </div>
-          <div className="flex justify-between text-xs text-gray-500 mt-2">
-            <span>No DR</span>
-            <span>Mild</span>
-            <span>Moderate</span>
-            <span>Severe</span>
-            <span>PDR</span>
+          <div className="mt-6 rounded-3xl border border-slate-200 bg-white/90 p-4">
+            <div className="mb-3 flex items-center justify-between gap-4">
+              <span className="text-sm font-semibold text-slate-700">Severity assessment</span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium uppercase tracking-[0.16em] text-slate-500">
+                DR scale
+              </span>
+            </div>
+            <div className="h-3 overflow-hidden rounded-full bg-slate-200">
+              <div
+                className={`h-3 rounded-full ${getSeverityColor()} transition-all duration-1000 ease-out`}
+                style={{ width: `${((prediction.class + 1) / 5) * 100}%` }}
+              />
+            </div>
+            <div className="mt-3 grid grid-cols-5 gap-2 text-center text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
+              {probabilityLabels.map((label) => (
+                <span key={label}>{label}</span>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Recommendations */}
-        <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
-          <h4 className="text-sm font-medium text-blue-900 mb-2 flex items-center space-x-2">
-            <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-            <span>Clinical Recommendation</span>
-          </h4>
-          <p className="text-sm text-blue-800 leading-relaxed">
-            {predictedClass.recommendation}
-          </p>
+        <div className="recommendation-card mt-6">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-teal-700 shadow-sm">
+              <ShieldAlert className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">Clinical recommendation</p>
+              <h3 className="mt-1 text-lg font-semibold text-slate-950">Suggested next step</h3>
+            </div>
+          </div>
+          <p className="mt-4 text-sm leading-7 text-slate-700">{predictedClass.recommendation}</p>
         </div>
-      </div>
+      </section>
 
-      {/* Detailed Probabilities */}
-      <div className="card">
-        <div className="flex items-center space-x-2 mb-4">
-          <BarChart3 className="w-5 h-5 text-gray-600" />
-          <h3 className="text-lg font-semibold text-gray-900">Probability Distribution</h3>
+      <section className="diagnostic-card">
+        <div className="mb-5 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+            <BarChart3 className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Model output</p>
+            <h3 className="mt-1 text-xl font-semibold text-slate-950">Probability distribution</h3>
+          </div>
         </div>
-        
+
         <div className="space-y-4">
           {drClasses.map((drClass, index) => {
-            const probability = (prediction.probabilities[index] * 100).toFixed(1)
+            const probability = Number((prediction.probabilities[index] * 100).toFixed(1))
             const isHighest = index === prediction.class
-            
+
             return (
-              <div key={index} className={`transition-all duration-300 ${isHighest ? 'transform scale-105' : ''}`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className={`text-sm font-medium ${isHighest ? 'text-gray-900' : 'text-gray-600'}`}>
+              <div
+                key={drClass.id}
+                className={`rounded-3xl border px-4 py-4 transition-all duration-200 ${
+                  isHighest ? 'border-cyan-200 bg-cyan-50/70 shadow-sm' : 'border-slate-200 bg-white/80'
+                }`}
+              >
+                <div className="mb-3 flex items-center justify-between gap-4">
+                  <span className={`text-sm font-semibold ${isHighest ? 'text-slate-950' : 'text-slate-700'}`}>
                     {drClass.name}
                   </span>
-                  <span className={`text-sm font-bold ${isHighest ? 'text-blue-600' : 'text-gray-600'}`}>
-                    {probability}%
+                  <span className={`text-sm font-bold ${isHighest ? 'text-cyan-700' : 'text-slate-600'}`}>
+                    {probability.toFixed(1)}%
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                  <div 
+                <div className="probability-bar-track">
+                  <div
                     className={`h-2.5 rounded-full transition-all duration-1000 ease-out ${
-                      isHighest ? 'bg-gradient-to-r from-blue-500 to-indigo-600' : 'bg-gray-400'
+                      isHighest ? 'bg-gradient-to-r from-teal-600 to-cyan-500' : 'bg-slate-400'
                     }`}
                     style={{ width: `${Math.max(probability, 2)}%` }}
-                  ></div>
+                  />
                 </div>
               </div>
             )
           })}
         </div>
-      </div>
+      </section>
 
-      {/* Disclaimer */}
-      <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-lg p-4">
-        <div className="flex items-start space-x-3">
-          <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-            <AlertTriangle className="w-4 h-4 text-yellow-600" />
+      <section className="disclaimer-card">
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-amber-700">
+            <AlertTriangle className="h-4 w-4" />
           </div>
           <div>
-            <h4 className="text-sm font-medium text-yellow-900 mb-2">
-              Medical Disclaimer
-            </h4>
-            <p className="text-sm text-yellow-800 leading-relaxed">
-              This AI tool is designed for research and educational purposes only. Results should not be used as the sole basis for medical decisions.
+            <h4 className="text-sm font-semibold uppercase tracking-[0.16em]">Medical disclaimer</h4>
+            <p className="mt-2">
+              This interface is designed for research and educational use only. Outputs should not be used
+              as the sole basis for diagnosis or treatment decisions.
             </p>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
