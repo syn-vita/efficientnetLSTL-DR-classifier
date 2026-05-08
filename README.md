@@ -16,8 +16,11 @@ python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-This repo does not currently track a Python dependency manifest. The refactor smoke checks were verified with:
-`torch`, `torchvision`, `pandas`, `numpy`, `matplotlib`, `scikit-learn`, `pillow`, `tqdm`, `onnx`, `onnxruntime`, `thop`, and `fvcore`.
+Install Python dependencies from the tracked manifest:
+
+```powershell
+pip install -r requirements.txt
+```
 
 For the frontend:
 
