@@ -1,122 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --app-bg: #eef6f8;
+    --app-bg-soft: #f8fbfc;
+    --surface: rgba(255, 255, 255, 0.88);
+    --surface-strong: #ffffff;
+    --surface-muted: #edf6f8;
+    --border-soft: #d5e6ea;
+    --border-strong: #b5d6dc;
+    --text-strong: #10212b;
+    --text-muted: #506772;
+    --text-soft: #6f8791;
+    --brand: #1098ad;
+    --brand-deep: #0f766e;
+    --brand-soft: #dff5f8;
+    --brand-ink: #0b5460;
+    --success-soft: #e9f8ef;
+    --warning-soft: #fff6e7;
+    --danger-soft: #fff0ed;
+  }
+
   * {
-    @apply border-gray-200;
+    @apply border-slate-200;
   }
-  body {
-    @apply bg-gray-50 text-gray-900 font-sans;
-  }
+
   html {
     scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Figtree', sans-serif;
+    color: var(--text-strong);
+    background:
+      radial-gradient(circle at top, rgba(16, 152, 173, 0.14), transparent 28%),
+      linear-gradient(180deg, #f8fbfc 0%, #eef6f8 100%);
+  }
+
+  button {
+    @apply cursor-pointer;
   }
 }
 
 @layer components {
+  .app-shell {
+    @apply min-h-screen;
+  }
+
   .btn {
-    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
   }
-  
+
   .btn-primary {
-    @apply btn bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+    @apply btn text-white shadow-sm hover:-translate-y-0.5 hover:shadow-lg focus:ring-cyan-500;
+    background: linear-gradient(135deg, var(--brand-deep), var(--brand));
   }
-  
+
   .btn-secondary {
-    @apply btn bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500 shadow-sm hover:shadow-md;
+    @apply btn border text-slate-700 shadow-sm hover:bg-white focus:ring-cyan-500;
+    border-color: var(--border-strong);
+    background: rgba(255, 255, 255, 0.7);
   }
-  
+
   .btn-outline {
-    @apply btn border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500 shadow-sm hover:shadow-md;
+    @apply btn border bg-white/80 text-slate-700 shadow-sm hover:bg-white focus:ring-cyan-500;
+    border-color: var(--border-soft);
   }
-  
+
+  .surface-card {
+    @apply rounded-[28px] border p-6 shadow-sm backdrop-blur-md transition-all duration-200;
+    background: var(--surface);
+    border-color: var(--border-soft);
+    box-shadow: 0 18px 48px rgba(16, 33, 43, 0.06);
+  }
+
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200;
+    @apply surface-card;
   }
-  
+
+  .eyebrow {
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em];
+    border-color: rgba(15, 118, 110, 0.14);
+    background: rgba(223, 245, 248, 0.8);
+    color: var(--brand-ink);
+  }
+
+  .section-title {
+    @apply text-3xl font-semibold tracking-tight text-slate-950 md:text-4xl;
+  }
+
+  .section-copy {
+    @apply text-base leading-7 text-slate-600 md:text-lg;
+  }
+
+  .hero-glow {
+    background:
+      radial-gradient(circle at top left, rgba(16, 152, 173, 0.14), transparent 44%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(237, 246, 248, 0.82));
+  }
+
+  .stat-card {
+    @apply rounded-3xl border px-5 py-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5;
+    background: rgba(255, 255, 255, 0.86);
+    border-color: var(--border-soft);
+  }
+
+  .feature-card {
+    @apply rounded-[28px] border p-7 transition-all duration-200;
+    background: rgba(255, 255, 255, 0.82);
+    border-color: var(--border-soft);
+  }
+
+  .feature-card-active {
+    border-color: rgba(15, 118, 110, 0.28);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(237, 246, 248, 0.85));
+    box-shadow: 0 22px 55px rgba(15, 118, 110, 0.10);
+  }
+
+  .model-spotlight {
+    @apply overflow-hidden rounded-[32px] border p-8 shadow-lg;
+    border-color: rgba(15, 118, 110, 0.18);
+    background:
+      linear-gradient(160deg, rgba(14, 116, 144, 0.06), rgba(255, 255, 255, 0.96)),
+      #ffffff;
+  }
+
+  .model-secondary {
+    @apply rounded-[28px] border p-6 shadow-sm;
+    border-color: var(--border-soft);
+    background: rgba(255, 255, 255, 0.86);
+  }
+
+  .muted-grid {
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
   .upload-area {
-    @apply border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 hover:bg-blue-50 transition-all duration-200 cursor-pointer;
+    @apply rounded-[28px] border-2 border-dashed p-8 text-center transition-all duration-200;
+    border-color: rgba(16, 152, 173, 0.24);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(239, 248, 250, 0.94));
   }
-  
+
+  .upload-area:hover {
+    border-color: rgba(15, 118, 110, 0.42);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(223, 245, 248, 0.94));
+  }
+
   .upload-area.dragover {
-    @apply border-blue-500 bg-blue-50;
+    border-color: rgba(15, 118, 110, 0.65);
+    box-shadow: 0 20px 50px rgba(15, 118, 110, 0.12);
   }
-  
+
   .tab {
-    @apply px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 cursor-pointer;
+    @apply inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-200;
   }
-  
+
   .tab-active {
-    @apply tab bg-blue-100 text-blue-700 shadow-sm;
+    @apply tab text-white shadow-sm;
+    background: linear-gradient(135deg, var(--brand-deep), var(--brand));
   }
-  
+
   .tab-inactive {
-    @apply tab text-gray-600 hover:text-gray-900 hover:bg-gray-100;
+    @apply tab border bg-white/80 text-slate-600 hover:bg-white hover:text-slate-900;
+    border-color: var(--border-soft);
   }
-  
+
   .result-badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+    @apply inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold;
   }
-  
+
   .result-no-dr {
-    @apply result-badge bg-green-100 text-green-700;
+    @apply result-badge text-emerald-700;
+    background: var(--success-soft);
   }
-  
+
   .result-mild {
-    @apply result-badge bg-yellow-100 text-yellow-700;
+    @apply result-badge text-amber-700;
+    background: var(--warning-soft);
   }
-  
+
   .result-moderate {
-    @apply result-badge bg-orange-100 text-orange-700;
+    @apply result-badge text-orange-700;
+    background: #fff0e4;
   }
-  
+
   .result-severe {
-    @apply result-badge bg-red-100 text-red-700;
+    @apply result-badge text-red-700;
+    background: #ffe8e5;
   }
-  
+
   .result-proliferative {
-    @apply result-badge bg-red-100 text-red-800;
+    @apply result-badge text-red-800;
+    background: var(--danger-soft);
   }
 
-  /* Gradient animations */
-  .animate-gradient {
-    background-size: 200% 200%;
-    animation: gradient 3s ease infinite;
-  }
-
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  /* Floating animation for hero elements */
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  /* Pulse animation for loading states */
-  .animate-pulse-slow {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  /* Flip card animations */
   .perspective-1000 {
     perspective: 1000px;
   }
@@ -145,5 +229,20 @@
 
   .flip-card-back {
     transform: rotateY(180deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
