@@ -1,137 +1,238 @@
-# Thesis: Diabetic Retinopathy Classification (EfficientNet-B0 variants)
+# Diabetic Retinopathy Classification
 
-This repository contains training code for EfficientNet-B0 and variants (CBAM, LSTL) and a React (Vite) web app that runs ONNX models in the browser.
+Primary documentation for the repository. This project contains the Python workflows for diabetic retinopathy model training, evaluation, and ONNX export, plus the React web app that serves browser-based inference.
 
 ## Prerequisites
 
-- Windows with PowerShell (or your preferred shell)
-- Python 3.10+ with pip
-- Node.js 18+ (for the web app)
+- Windows with PowerShell
+- Python 3.10+ and `pip`
+- Node.js 18+
+- A local Python virtual environment for the training and evaluation workflows
 
-## Project structure (key paths)
-
-- `src/dr_thesis/` - staged package root for shared Python code during the refactor
-- `scripts/` - repo-level smoke checks and future Python entry points
-- `data/` - tracked CSV metadata inputs such as `dataset.csv`, `train.csv`, `valid.csv`, and `test.csv`
-- `artifacts/` - boundary for generated checkpoints, figures, exports, and evaluation outputs
-- `docs/references/` - thesis papers and other non-code reference material
-- `Main/` - compatibility area for the existing Python training, evaluation, and export workflows
-- `dr-classification-webapp/` - Vite + React web application
-
----
-
-## How to run the training
-
-1) Create a virtual environment and install dependencies
+Create and activate the virtual environment from the repo root:
 
 ```powershell
-# From the repo root (Thesis/)
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
 ```
 
-2) Prepare the data
+This repo does not currently track a Python dependency manifest. The refactor smoke checks were verified with:
+`torch`, `torchvision`, `pandas`, `numpy`, `matplotlib`, `scikit-learn`, `pillow`, `tqdm`, `onnx`, `onnxruntime`, `thop`, and `fvcore`.
 
-- Download images from: https://www.kaggle.com/datasets/sovitrath/diabetic-retinopathy-224x224-2019-data?select=colored_images
-- Place images under `Main/images/`
-- Ensure `data/dataset.csv` exists with columns like `id_code,diagnosis` (images are `<id_code>.png`)
-
-3) Adjust paths if needed
-
-The training scripts set `PROJECT_FOLDER` to `C:/Users/Luigi/Desktop/code/Thesis/Main` by default. If your path differs, open the script(s) and update the `PROJECT_FOLDER` constant accordingly.
-
-4) Run training scripts
-
-```powershell
-# Baseline EfficientNet-B0
-python "Main/Training Files/train_efficientnet_b0.py"
-
-# EfficientNet-B0 + CBAM
-python "Main/Training Files/train_efficientnet_b0_cbam.py"
-
-# EfficientNet-B0 + LSTL
-python "Main/Training Files/train_efficientnet_b0_lstl.py"
-```
-
-Outputs
-- Best model checkpoints: `Main/efficientnet_b0*_clean_fold_*.pth`
-- Detailed metrics and plots: `Main/Figure Outputs/**/all_folds_detailed_metrics_*.csv` and `Fold*_Figure.png`
-- A compact summary may be saved at `Main/Figure Outputs/overall_accuracy_by_fold.csv`
-
-Export ONNX models for the web app
-
-```powershell
-# Exports the best folds found in metrics to dr-classification-webapp/public/models
-python export_best_folds_to_onnx.py
-```
-
----
-
-## How to test every fold of each model
-
-The interactive evaluator at `Main/evaluate_trained_folds.py` runs ONNX checkpoints for all folds and reports Accuracy, Precision, Recall, F1, and estimated FLOPs per fold.
-
-1) Activate your virtual environment (`.venv`) and ensure `onnxruntime`, `onnx`, `matplotlib`, `pandas`, and `scikit-learn` are installed (already covered by `requirements.txt`).
-2) From the repo root, launch the tester:
-
-```powershell
-python Main/evaluate_trained_folds.py
-```
-
-3) Follow the CLI prompts:
-	- Choose which model family to test (baseline / CBAM / LSTL / all)
-	- Provide the folder that contains your evaluation images
-	- Provide the labels file (`.csv` or `.dat` with filename + label columns)
-	- Accept or override the detected ONNX models directory (e.g., `output 2/`)
-	- Optionally override the output directory, batch size, and DataLoader worker count
-
-4) Review the generated artifacts under `Main/Evaluation_Results/<model_key>/fold_<n>/`:
-	- `confusion_matrix_counts.csv` plus heatmap images (absolute + normalized)
-	- `metrics.json` and `metrics_overview.png` summarizing Accuracy / Precision / Recall / F1
-	- `metrics_summary_<model_key>.csv` consolidating all folds (with a mean row)
-	- `combined_summary.json` at the root combines every evaluated model
-
-Each fold reuses the provided ONNX checkpoint and runs strictly on CPU via ONNX Runtime, so no GPU is required for testing.
-
----
-
-## How to run the web app
-
-1) Install dependencies
+For the frontend:
 
 ```powershell
 cd dr-classification-webapp
 npm install
 ```
 
-2) Ensure ONNX models are present
+## Project Structure
 
-Place exported `.onnx` files under `dr-classification-webapp/public/models/`. The app reads these on model selection.
+- `scripts/` - canonical commands you run from the repo root
+- `src/dr_thesis/` - maintained Python implementation
+- `src/dr_thesis/training/` - DR model training logic
+- `src/dr_thesis/evaluation/` - fold evaluation logic
+- `src/dr_thesis/export/` - ONNX export logic
+- `src/dr_thesis/binary_classifier/` - fundus-image classifier workflow used by the web app
+- `data/` - tracked CSV metadata for the active DR workflows
+- `data/legacy/` - older thesis metadata retained for reproduction
+- `artifacts/checkpoints/` - `.pth` checkpoints
+- `artifacts/evaluation/` - evaluation outputs
+- `artifacts/exports/` - exported ONNX files
+- `artifacts/archive/` - historical thesis outputs moved out of the active workflow
+- `docs/references/` - thesis papers and reference PDFs
+- `dr-classification-webapp/` - Vite/React frontend
+- `dr-classification-webapp/public/models/` - ONNX models loaded by the browser app
 
-3) Start the dev server
+## Data Preparation
+
+### DR model training data
+
+The DR training workflow expects:
+- an image directory you supply with `--image-dir`
+- a CSV labels file you supply with `--csv-path`
+
+The CSV should match the APTOS-style format used by the training code, with columns like:
+
+```text
+id_code,diagnosis
+```
+
+The training loader converts `id_code` values into image filenames by appending `.png`, so your image folder should contain files like:
+
+```text
+<id_code>.png
+```
+
+If you are using the same dataset source as the earlier thesis workflow, the original resized APTOS image download referenced by the project was:
+https://www.kaggle.com/datasets/sovitrath/diabetic-retinopathy-224x224-2019-data?select=colored_images
+
+Tracked CSVs already in the repo:
+- `data/dataset.csv`
+- `data/train.csv`
+- `data/valid.csv`
+- `data/test.csv`
+
+### DR evaluation data
+
+The evaluator expects:
+- an evaluation image directory
+- a labels file passed with `--labels-path`
+
+Supported label file formats:
+- `.csv`
+- `.tsv`
+- `.dat`
+
+The default tracked test labels file is `data/test.csv`.
+
+### Fundus classifier data
+
+The binary fundus-image classifier expects two image folders:
+- `--fundus-dir` for retinal fundus images
+- `--non-fundus-dir` for non-retinal images
+
+Both folders can be flat or recursive. Supported image extensions include:
+- `.png`
+- `.jpg`
+- `.jpeg`
+- `.bmp`
+- `.tif`
+- `.tiff`
+
+### Legacy metadata
+
+Historical metadata retained for reproduction:
+- `data/legacy/aptos2019_labels.csv`
+- `data/legacy/messidor_data.csv`
+
+## Canonical Python Commands
+
+### Train DR models
+
+Show options:
 
 ```powershell
+python scripts/train.py --help
+```
+
+Example:
+
+```powershell
+python scripts/train.py --model baseline --image-dir <path-to-images> --csv-path data/train.csv --out-dir artifacts/checkpoints --yes
+```
+
+Notes:
+- `--model` accepts `baseline`, `cbam`, `lstl`, or `all`
+- if `--out-dir` is omitted, the script writes outputs to the CSV folder
+- for best compatibility with the evaluation and export defaults, use `artifacts/checkpoints/` explicitly
+
+### Train the fundus-image classifier
+
+Show options:
+
+```powershell
+python scripts/train_fundus_classifier.py --help
+```
+
+Example:
+
+```powershell
+python scripts/train_fundus_classifier.py --fundus-dir <path-to-fundus-images> --non-fundus-dir <path-to-non-fundus-images> --yes
+```
+
+Default outputs:
+- best checkpoint: `artifacts/checkpoints/fundus_classifier_efficientnet_best.pth`
+- ONNX export: `dr-classification-webapp/public/models/fundus_classifier_efficientnet_b3.onnx`
+
+### Evaluate DR checkpoints
+
+Show options:
+
+```powershell
+python scripts/evaluate.py --help
+```
+
+Example:
+
+```powershell
+python scripts/evaluate.py --models baseline --images-dir <path-to-eval-images> --labels-path data/test.csv --models-dir artifacts/checkpoints --out-dir artifacts/evaluation
+```
+
+Default paths:
+- checkpoint folder: `artifacts/checkpoints/`
+- output folder: `artifacts/evaluation/`
+
+### Export DR ONNX models
+
+Preview planned exports:
+
+```powershell
+python scripts/export_onnx.py --print-only
+```
+
+Export to the default artifact location:
+
+```powershell
+python scripts/export_onnx.py --pth-dir artifacts/checkpoints --out-dir artifacts/exports
+```
+
+Export directly into the web app model folder:
+
+```powershell
+python scripts/export_onnx.py --pth-dir artifacts/checkpoints --out-dir dr-classification-webapp/public/models
+```
+
+## Web App
+
+Start the frontend:
+
+```powershell
+cd dr-classification-webapp
 npm run dev
 ```
 
-Then open the URL shown in the terminal (typically http://localhost:3000). Upload an image, select a model, and view predictions. FLOPs and model info are shown in the UI.
-
-Production build (optional)
+Other frontend commands:
 
 ```powershell
 npm run build
+npm run lint
 npm run preview
 ```
 
----
+The app currently expects these ONNX files in `dr-classification-webapp/public/models/`:
+- `/models/efficientnet_b0_clean_fold_3.onnx`
+- `/models/efficientnet_b0_cbam_clean_fold_4.onnx`
+- `/models/efficientnet_b0_lstl_clean_fold_4.onnx`
+- `/models/fundus_classifier_efficientnet_b3.onnx`
 
-## Tips & troubleshooting
+Where they are wired:
+- DR model paths: `dr-classification-webapp/src/config/models.js`
+- fundus classifier path: `dr-classification-webapp/src/components/ImageUpload.jsx`
 
-- Large files: if you plan to push `.pth` or `.onnx` files (>50MB) to GitHub, consider Git LFS
-- Metrics selection: training scripts select best epochs by highest balanced accuracy per fold
-- Paths: if you relocate this repo, update `PROJECT_FOLDER` in training scripts so they can find `Main/`
-# EfficientNet-B0
+## Output Locations
 
+Current default output behavior:
 
+- DR training:
+  - `.pth` and `.onnx` files go to the `--out-dir` you choose
+  - training figures go under `Figure Outputs/` inside that same output location
+- DR evaluation:
+  - outputs go to `artifacts/evaluation/` by default
+- DR export:
+  - ONNX files go to `artifacts/exports/` by default
+- fundus classifier:
+  - checkpoint goes to `artifacts/checkpoints/`
+  - ONNX goes to `dr-classification-webapp/public/models/`
 
+## Verification
+
+Minimum safe verification after structural changes:
+
+```powershell
+python scripts/smoke_check.py
+python scripts/train.py --help
+python scripts/train_fundus_classifier.py --help
+python scripts/evaluate.py --help
+python scripts/export_onnx.py --print-only
+```
