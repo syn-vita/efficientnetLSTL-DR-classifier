@@ -1,17 +1,21 @@
 import { useState } from 'react'
+import { Brain, Microscope, ShieldCheck } from 'lucide-react'
 import Header from './components/Header'
 import ImageUpload from './components/ImageUpload'
 import ResultDisplay from './components/ResultDisplay'
 import LandingPage from './components/LandingPage'
-import { modelConfig } from './config/models'
+import { appConfig, modelConfig } from './config/models'
 
 function App() {
-  const [currentView, setCurrentView] = useState('landing') // 'landing' or 'testing'
-  const [activeModel, setActiveModel] = useState('baseline')
+  const [currentView, setCurrentView] = useState('landing')
+  const [activeModel, setActiveModel] = useState('lstl')
   const [uploadedImage, setUploadedImage] = useState(null)
   const [prediction, setPrediction] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [lastError, setLastError] = useState(null)
+
+  const modelEntries = Object.entries(modelConfig)
+  const activeModelConfig = modelConfig[activeModel]
 
   const handleStartTesting = () => {
     setCurrentView('testing')
@@ -19,7 +23,6 @@ function App() {
 
   const handleBackToLanding = () => {
     setCurrentView('landing')
-    // Reset all state when going back to landing
     setUploadedImage(null)
     setPrediction(null)
     setIsLoading(false)
@@ -27,7 +30,6 @@ function App() {
   }
 
   const handleImageUpload = async (imageFile) => {
-    // Handle clear action or empty input
     if (!imageFile) {
       setUploadedImage(null)
       setPrediction(null)
@@ -47,7 +49,7 @@ function App() {
         const { runOnnx } = await import('./utils/inference')
         const arrBuf = await imageFile.arrayBuffer()
         const blob = new Blob([arrBuf])
-        // Prefer ImageBitmap for performance, but fall back to HTMLImageElement if unavailable
+
         let imgSource
         try {
           imgSource = await createImageBitmap(blob)
@@ -59,6 +61,7 @@ function App() {
             img.src = URL.createObjectURL(blob)
           })
         }
+
         const result = await runOnnx(cfg.modelPath, imgSource)
         const probs = result.probabilities
         const top = result.classIndex
@@ -68,8 +71,7 @@ function App() {
           probabilities: probs
         })
       } else {
-        // Fallback mock prediction
-        await new Promise(resolve => setTimeout(resolve, 1200))
+        await new Promise((resolve) => setTimeout(resolve, 1200))
         const mockResult = {
           class: Math.floor(Math.random() * 5),
           confidence: 0.85 + Math.random() * 0.14,
@@ -96,113 +98,183 @@ function App() {
     setPrediction(null)
   }
 
-  // Show landing page if currentView is 'landing'
   if (currentView === 'landing') {
     return <LandingPage onStartTesting={handleStartTesting} />
   }
 
-  // Show testing interface
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header 
-        activeModel={activeModel}
-        onModelChange={setActiveModel}
-        onBackToLanding={handleBackToLanding}
-        showBackButton={true}
-      />
-      
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column - Upload and Controls */}
-          <div className="space-y-6">
-            <div className="card">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Upload Retinal Image
+    <div className="app-shell">
+      <Header onBackToLanding={handleBackToLanding} showBackButton />
+
+      <main className="mx-auto max-w-7xl px-4 py-8 lg:py-10">
+        <section className="surface-card mb-6 overflow-hidden p-0">
+          <div className="grid gap-0 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="border-b border-slate-200/80 px-6 py-6 lg:border-b-0 lg:border-r">
+              <span className="eyebrow">Testing workspace</span>
+              <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-950 md:text-3xl">
+                Guided model comparison with LSTL surfaced first
               </h2>
-              <p className="text-sm text-gray-600 mb-6">
-                Upload a retinal fundus image for diabetic retinopathy analysis using the {modelConfig[activeModel].name} model.
+              <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">
+                The testing screen now leads with the thesis-highlighted LSTL configuration, while
+                Baseline and CBAM remain available as secondary comparison paths.
               </p>
-              
-              <ImageUpload 
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-3">
+                <div className="rounded-3xl border border-teal-100 bg-teal-50/70 p-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-teal-700 shadow-sm">
+                    <Brain className="h-5 w-5" />
+                  </div>
+                  <p className="mt-4 text-sm font-medium text-slate-500">Primary model</p>
+                  <p className="mt-2 font-semibold text-slate-950">EfficientNet-B0 + LSTL</p>
+                </div>
+                <div className="rounded-3xl border border-slate-200 bg-white/80 p-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+                    <Microscope className="h-5 w-5" />
+                  </div>
+                  <p className="mt-4 text-sm font-medium text-slate-500">Use context</p>
+                  <p className="mt-2 font-semibold text-slate-950">Research and educational analysis</p>
+                </div>
+                <div className="rounded-3xl border border-slate-200 bg-white/80 p-5">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
+                    <ShieldCheck className="h-5 w-5" />
+                  </div>
+                  <p className="mt-4 text-sm font-medium text-slate-500">Workflow</p>
+                  <p className="mt-2 font-semibold text-slate-950">Upload, analyze, then compare</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-slate-50/80 px-6 py-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">
+                Available variants
+              </p>
+              <div className="mt-5 space-y-3">
+                {modelEntries.map(([key, config]) => {
+                  const isActive = activeModel === key
+
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => onModelChangeHelper(key, setActiveModel)}
+                      className={`w-full rounded-[26px] border px-5 py-4 text-left transition-all duration-200 ${
+                        isActive
+                          ? 'border-teal-200 bg-white shadow-sm'
+                          : 'border-slate-200 bg-white/75 hover:border-slate-300 hover:bg-white'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-lg font-semibold text-slate-950">{config.shortName}</span>
+                            <span
+                              className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] ${
+                                config.badge === 'Recommended'
+                                  ? 'bg-teal-100 text-teal-800'
+                                  : 'bg-slate-100 text-slate-600'
+                              }`}
+                            >
+                              {config.badge}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-sm leading-6 text-slate-600">{config.description}</p>
+                        </div>
+                        <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-500">
+                          fold {config.bestFold}
+                        </span>
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="space-y-6">
+            <div className="surface-card">
+              <div className="mb-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">
+                  Upload workflow
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold text-slate-950">Upload retinal fundus image</h2>
+                <p className="mt-3 text-sm leading-7 text-slate-600">
+                  Upload a retinal fundus image for diabetic retinopathy analysis using the{' '}
+                  {activeModelConfig.name} model.
+                </p>
+              </div>
+
+              <ImageUpload
                 onImageUpload={handleImageUpload}
                 onClear={handleClearResults}
                 uploadedImage={uploadedImage}
                 isLoading={isLoading}
               />
-              
+
               {uploadedImage && (
-                <div className="mt-4 flex gap-3">
-                  <button
-                    onClick={handleClearResults}
-                    className="btn-secondary"
-                    disabled={isLoading}
-                  >
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <button onClick={handleClearResults} className="btn-secondary" disabled={isLoading}>
                     Clear Results
                   </button>
-                  <button
-                    onClick={() => handleImageUpload(uploadedImage)}
-                    className="btn-primary"
-                    disabled={isLoading}
-                  >
+                  <button onClick={() => handleImageUpload(uploadedImage)} className="btn-primary" disabled={isLoading}>
                     {isLoading ? 'Analyzing...' : 'Re-analyze'}
                   </button>
                 </div>
               )}
             </div>
 
-            {/* Model Information */}
-            <div className="card">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Current Model: {modelConfig[activeModel].name}
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                {modelConfig[activeModel].description}
+            <div className="surface-card">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-teal-700">
+                Active model details
               </p>
-              {/* <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Architecture:</span>
-                  <span className="font-medium">{modelConfig[activeModel].architecture}</span>
+              <h3 className="mt-2 text-2xl font-semibold text-slate-950">{activeModelConfig.name}</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-600">{activeModelConfig.description}</p>
+
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Architecture</p>
+                  <p className="mt-2 font-semibold text-slate-950">{activeModelConfig.architecture}</p>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Parameters:</span>
-                  <span className="font-medium">{modelConfig[activeModel].parameters}</span>
+                <div className="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Best fold</p>
+                  <p className="mt-2 font-semibold text-slate-950">Fold {activeModelConfig.bestFold}</p>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Accuracy:</span>
-                  <span className="font-medium">{modelConfig[activeModel].accuracy}</span>
+                <div className="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Parameters</p>
+                  <p className="mt-2 font-semibold text-slate-950">{activeModelConfig.parameters}</p>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">FLOPs (224x224):</span>
-                  <span className="font-medium">{modelConfig[activeModel].gflops?.toFixed ? modelConfig[activeModel].gflops.toFixed(3) : modelConfig[activeModel].gflops} GFLOPs</span>
+                <div className="rounded-3xl border border-slate-200 bg-slate-50/80 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Balanced accuracy</p>
+                  <p className="mt-2 font-semibold text-slate-950">{activeModelConfig.accuracy}</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-3">
-                Accuracy shown is balanced accuracy on the validation set at the best epoch for the selected fold.
-              </p> */}
             </div>
           </div>
 
-          {/* Right Column - Results */}
           <div>
-            <ResultDisplay 
+            <ResultDisplay
               prediction={prediction}
               isLoading={isLoading}
-              modelName={modelConfig[activeModel].name}
+              modelName={activeModelConfig.name}
               error={lastError}
             />
           </div>
-        </div>
+        </section>
       </main>
-      
-      <footer className="border-t border-gray-200 bg-white mt-16">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <p className="text-center text-sm text-gray-600">
-            DR Classification Tool • For Research and Educational Use Only
+
+      <footer className="mt-16 border-t border-slate-200/80 bg-white/70 px-4 py-6 backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl">
+          <p className="text-center text-sm text-slate-600">
+            {appConfig.compactTitle} • For research and educational use only
           </p>
         </div>
       </footer>
     </div>
   )
+}
+
+function onModelChangeHelper(modelKey, setActiveModel) {
+  setActiveModel(modelKey)
 }
 
 export default App
