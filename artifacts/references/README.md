@@ -1,4 +1,4 @@
-# docs/references
+# artifacts/references
 
 This folder stores thesis reference material such as papers and PDFs.
 
